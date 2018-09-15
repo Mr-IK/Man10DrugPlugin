@@ -12,7 +12,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        drugDataLoad();
+        drugDataLoad();//load config
 
     }
 
