@@ -97,7 +97,6 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         }
         Player player = event.getPlayer();
         player.getInventory().remove(event.getItem());
-        player.
 
     }
 }
