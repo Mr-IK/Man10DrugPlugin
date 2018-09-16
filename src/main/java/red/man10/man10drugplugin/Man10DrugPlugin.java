@@ -1,9 +1,11 @@
 package red.man10.man10drugplugin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,7 +14,12 @@ import java.io.*;
 
 import static red.man10.man10drugplugin.LoadConfigData.LoadConfig;
 
-public final class Man10DrugPlugin extends JavaPlugin {
+public final class Man10DrugPlugin extends JavaPlugin implements Listener {
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        return true;
+    }
 
     @Override
     public void onEnable() {
