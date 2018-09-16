@@ -21,7 +21,8 @@ public class LoadConfigData {
         String[] str = brLine.split(":");
         switch (str[0]){
             case "NAME":data.name = str[1];break;
-            case "ID":data.id = Integer.parseInt(str[1]);break;
+            case "MATERIAL":data.material = str[1];break;
+            case "DAMAGE":data.damage = Short.parseShort(str[1]);break;
             case "LEVEL":data.level = Integer.parseInt(str[1]);break;
             case "COUNT":data.count = Integer.parseInt(str[1]);break;
             case "BUFF":{
@@ -48,7 +49,8 @@ public class LoadConfigData {
 
     static class DrugData{
         String name;
-        int id;
+        String material;
+        short damage;
         int level;
         int count;
         HashMap<String,String[]> buffs = new HashMap<String, String[]>();
@@ -66,11 +68,5 @@ public class LoadConfigData {
     }
     public static DrugData saveData(String drugName,DrugData key){
         return drugMap.put(drugName,key);
-    }
-    public static ItemStack drugItem(String drugName){
-        DrugData data = loadData(drugName);
-        ItemStack drug = new ItemStack(Material.DIAMOND_HOE);
-        drug.getItemMeta().setDisplayName(data.name);
-        return drug;
     }
 }

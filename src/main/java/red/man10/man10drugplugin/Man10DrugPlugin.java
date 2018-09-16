@@ -17,6 +17,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static red.man10.man10drugplugin.LoadConfigData.*;
 import static red.man10.man10drugplugin.LoadConfigData.LoadConfig;
 import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 
@@ -64,13 +65,21 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
                 while ((str = br.readLine()) !=null){
                     LoadConfig(drugName.get(i),str);
                 }
-                drugItemStack.add(new ItemStack(Material.DIAMOND_HOE));
+                drugItemStack.add(drugItem(drugName.get(i)));
+
             }
         } catch (FileNotFoundException e) {
             Bukkit.getLogger().info("catch,br");
         } catch (IOException e) {
             Bukkit.getLogger().info("catch,br line");
         }
+    }
+
+    private static ItemStack drugItem(String drugName){
+        DrugData data = loadData(drugName);
+        ItemStack drug = new ItemStack(Material.valueOf(data.material),1,data.damage);
+        drug.getItemMeta().setDisplayName(data.name);
+        return drug;
     }
 
     @EventHandler
