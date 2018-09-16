@@ -1,10 +1,14 @@
 package red.man10.man10drugplugin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.util.List;
 
 import static red.man10.man10drugplugin.LoadConfigData.LoadConfig;
 
@@ -50,5 +54,20 @@ public final class Man10DrugPlugin extends JavaPlugin {
         } catch (IOException e) {
             Bukkit.getLogger().info("catch,br line");
         }
+    }
+
+    @EventHandler
+    public void playerJoinEvent(PlayerJoinEvent event){
+
+    }
+
+    @EventHandler
+    public void playerQuitEvent(PlayerQuitEvent event){
+
+    }
+
+    @EventHandler
+    public void useDrugEvent(PlayerInteractEntityEvent event){
+
     }
 }
