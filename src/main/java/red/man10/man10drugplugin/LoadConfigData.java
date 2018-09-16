@@ -1,10 +1,12 @@
 package red.man10.man10drugplugin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
+
 /*
 drugName...拡張子を含まないファイル名
  */
@@ -64,5 +66,11 @@ public class LoadConfigData {
     }
     public static DrugData saveData(String drugName,DrugData key){
         return drugMap.put(drugName,key);
+    }
+    public static ItemStack drugItem(String drugName){
+        DrugData data = loadData(drugName);
+        ItemStack drug = new ItemStack(Material.DIAMOND_HOE);
+        drug.getItemMeta().setDisplayName(data.name);
+        return drug;
     }
 }
