@@ -24,7 +24,7 @@ public class LoadConfigData {
             case "MATERIAL":data.material = str[1];break;
             case "DAMAGE":data.damage = Short.parseShort(str[1]);break;
             case "LEVEL":data.level = Integer.parseInt(str[1]);break;
-            case "COUNT":data.count = Integer.parseInt(str[1]);break;
+            case "POWER":data.power = Integer.parseInt(str[1]);break;
             case "BUFF":{
                 String[] buffLevel = str[1].split("/");
                 for (int i = 0;i!=buffLevel.length;i++){
@@ -48,11 +48,11 @@ public class LoadConfigData {
 
 
     static class DrugData{
-        String name;
-        String material;
-        short damage;
-        int level;
-        int count;
+        String name;//表示名
+        String material;//薬にするアイテム
+        short damage;//アイテムのダメージ値
+        int level;//何段階にするか
+        int power;//強さ
         HashMap<String,String[]> buffs = new HashMap<String, String[]>();
         HashMap<String,String[]> deBuffs = new HashMap<String, String[]>();
     }

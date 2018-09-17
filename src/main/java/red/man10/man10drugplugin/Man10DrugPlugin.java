@@ -67,6 +67,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
                 }
                 drugItemStack.add(drugItem(drugName.get(i)));
 
+
             }
         } catch (FileNotFoundException e) {
             Bukkit.getLogger().info("catch,br");
@@ -77,6 +78,11 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     private static ItemStack drugItem(String drugName){
         DrugData data = loadData(drugName);
+        if (data.level==data.buffs.size()&&data.level==data.deBuffs.size()){
+            Bukkit.getLogger().info(drugName+"のBUFF,DEBUFF,LEVELのどれかの設定が正しくできていません" +
+                    "アイテムスタックの作製を中断します");
+            return null;
+        }
         ItemStack drug = new ItemStack(Material.valueOf(data.material),1,data.damage);
         drug.getItemMeta().setDisplayName(data.name);
         return drug;
@@ -101,7 +107,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
                 Bukkit.getLogger().info(event.getPlayer().getName()+"が"+drugName.get(i)+"を使いました");
                 break;
             }
-            if (i==drugMap.size()-1)return;
+            if(i==drugMap.size()-1)return;
 
         }
         Player player = event.getPlayer();
