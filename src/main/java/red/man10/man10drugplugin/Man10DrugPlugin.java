@@ -23,7 +23,7 @@ import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 
 public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
-    static List<String> drugName = new ArrayList<String>();
+    static List<String> drugName = new ArrayList<String>();//薬の名前
     static List<ItemStack> drugItemStack = new ArrayList<ItemStack>();
 
     @Override
