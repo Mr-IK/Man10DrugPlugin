@@ -34,8 +34,9 @@ public class DataBase {
 
     }
     public static void loadDataBase(MySQLManager mysql, Player player){
-        ResultSet rs;
+        ResultSet rs = null;
         String[] key = new String[2];
+        key[0] = player.getName();
         for (int i = 0;i!=drugName.size();i++){
             key[1] = drugName.get(i);
             PlayerDrugData data = loadData(key);
@@ -46,6 +47,7 @@ public class DataBase {
                 data.count = rs.getInt("count");
                 data.level = rs.getInt("level");
                 data.time = rs.getInt("time");
+                rs.close();
                 saveData(key,data);
             } catch (SQLException e) {
                 sql = "INSERT INTO man10drugPlugin VALUES('"+
@@ -55,8 +57,19 @@ public class DataBase {
             }
 
         }
+        mysql.close();
     }
-    public static void saveDataBase(MySQLManager mysql){
-
+    public static void saveDataBase(MySQLManager mysql ,Player player){
+        String[] key = new String[2];
+        key[0] = player.getName();
+        for(int i = 0;i!=drugName.size();i++){
+            key[1] = drugName.get(i);
+            PlayerDrugData data = loadData(key);
+            String sql = "UPDATE man10drugPlugin SET count="+data.count+",level="+data.level+
+                    ",time="+data.time+" WHERE uuid='"+player.getUniqueId()+"',drug_name='"
+                    +drugName.get(i)+"';";
+            mysql.execute(sql);
+        }
+        mysql.close();
     }
 }
