@@ -2,8 +2,6 @@ package red.man10.man10drugplugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static red.man10.man10drugplugin.LoadConfigData.*;
@@ -24,17 +23,13 @@ import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     static List<String> drugName = new ArrayList<String>();//薬の名前
-    static List<ItemStack> drugItemStack = new ArrayList<ItemStack>();
+    static HashMap<String,ItemStack> drugStack = new HashMap<String, ItemStack>();//key,drugMap.name
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return true;
-    }
 
     @Override
     public void onEnable() {
         drugDataLoad();//load config
-
+        getCommand("mdp").setExecutor(new MDPCommand(this,mysql()));
     }
 
     @Override
@@ -65,7 +60,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
                 while ((str = br.readLine()) !=null){
                     LoadConfig(drugName.get(i),str);
                 }
-                drugItemStack.add(drugItem(drugName.get(i)));
+                drugStack.put(drugMap.get(drugName.get(i)).name,drugItem(drugName.get(i)));
 
 
             }
@@ -78,9 +73,13 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     private static ItemStack drugItem(String drugName){
         DrugData data = loadData(drugName);
-        if (data.level==data.buffs.size()&&data.level==data.deBuffs.size()){
+        if (!(data.level==data.buffs.size()&&data.level==data.deBuffs.size())){
             Bukkit.getLogger().info(drugName+"のBUFF,DEBUFF,LEVELのどれかの設定が正しくできていません" +
-                    "アイテムスタックの作製を中断します");
+                    "アイテムの作製を中断します");
+            return null;
+        }
+        if (data.name == null){
+            Bukkit.getLogger().info("表示名が入力されていません");
             return null;
         }
         ItemStack drug = new ItemStack(Material.valueOf(data.material),1,data.damage);
@@ -90,19 +89,19 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent event){
-
+        DataBase.loadDataBase(mysql(),event.getPlayer());
     }
 
     @EventHandler
     public void playerQuitEvent(PlayerQuitEvent event){
-
+        DataBase.loadDataBase(mysql(),event.getPlayer());
     }
 
     @EventHandler
     public void useDrugEvent(PlayerInteractEvent event){
         String drug;
         for (int i = 0;i!=drugMap.size();i++){//使用ドラッグ特定
-            if (!(event.getItem() ==drugItemStack.get(i))){
+            if (!(event.getItem() ==drugStack.get(drugName.get(i)))){
                 drug = drugName.get(i);
                 Bukkit.getLogger().info(event.getPlayer().getName()+"が"+drugName.get(i)+"を使いました");
                 break;
@@ -113,5 +112,9 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         player.getInventory().remove(event.getItem());
 
+    }
+    public MySQLManager mysql(){
+        MySQLManager mysql = new MySQLManager(this,"man10drugPlugin");
+        return mysql;
     }
 }

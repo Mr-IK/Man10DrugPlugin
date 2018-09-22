@@ -1,3 +1,9 @@
 name: Man10DrugPlugin
 version: ${project.version}
 main: red.man10.man10drugplugin.Man10DrugPlugin
+authors: [forest611]
+commands:
+  mdp:
+    description: Man10DrugPlugin
+    usage: /<command>
+    default: op

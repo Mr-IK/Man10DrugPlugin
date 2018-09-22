@@ -57,7 +57,6 @@ public class DataBase {
             }
 
         }
-        mysql.close();
     }
     public static void saveDataBase(MySQLManager mysql ,Player player){
         String[] key = new String[2];
@@ -70,6 +69,5 @@ public class DataBase {
                     +drugName.get(i)+"';";
             mysql.execute(sql);
         }
-        mysql.close();
     }
 }

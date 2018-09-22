@@ -57,7 +57,7 @@ public class LoadConfigData {
         HashMap<String,String[]> deBuffs = new HashMap<String, String[]>();
     }
 
-    public static HashMap<String,DrugData> drugMap = new HashMap<String, DrugData>();
+    public static HashMap<String,DrugData> drugMap = new HashMap<String, DrugData>();//key...drugName
 
     public static DrugData loadData(String drugName){
         DrugData data = drugMap.get(drugName);
