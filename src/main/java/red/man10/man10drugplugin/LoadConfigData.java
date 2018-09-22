@@ -29,7 +29,7 @@ public class LoadConfigData {
                 String[] buffLevel = str[1].split("/");
                 for (int i = 0;i!=buffLevel.length;i++){
                     String[] buff = buffLevel[i].split(",");
-                    data.buffs.put(drugName+i+1,buff);//level分けようにナンバーをふる
+                    data.buffs.put(i+1,buff);//level分けようにナンバーをふる
                 }
                 break;
             }
@@ -37,7 +37,7 @@ public class LoadConfigData {
                 String[] buffLevel = str[1].split("/");
                 for (int i = 0;i!=buffLevel.length;i++){
                     String[] buff = buffLevel[i].split(",");
-                    data.deBuffs.put(drugName+i+1,buff);//level分けようにナンバーをふる
+                    data.deBuffs.put(i+1,buff);//level分けようにナンバーをふる
                 }
                 break;
             }
@@ -52,9 +52,9 @@ public class LoadConfigData {
         String material;//薬にするアイテム
         short damage;//アイテムのダメージ値
         int level;//何段階にするか
-        int power;//強さ
-        HashMap<String,String[]> buffs = new HashMap<String, String[]>();
-        HashMap<String,String[]> deBuffs = new HashMap<String, String[]>();
+        int power;//指定回数使用でレベルアップ
+        HashMap<Integer,String[]> buffs = new HashMap<Integer, String[]>();//ポーション名、時間、レベル
+        HashMap<Integer,String[]> deBuffs = new HashMap<Integer, String[]>();
     }
 
     public static HashMap<String,DrugData> drugMap = new HashMap<String, DrugData>();//key...drugName

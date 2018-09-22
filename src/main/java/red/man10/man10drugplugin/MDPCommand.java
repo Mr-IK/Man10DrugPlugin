@@ -24,7 +24,7 @@ public class MDPCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return true;
         }
-        if (!sender.hasPermission("man10drug.useCmd")){
+        if (!sender.hasPermission(permission)){
             sender.sendMessage(permissionErrorString);
         }
             Player player = (Player)sender;

@@ -10,12 +10,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+import static red.man10.man10drugplugin.DataBase.*;
 import static red.man10.man10drugplugin.LoadConfigData.*;
 import static red.man10.man10drugplugin.LoadConfigData.LoadConfig;
 import static red.man10.man10drugplugin.LoadConfigData.drugMap;
@@ -73,11 +74,6 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     private static ItemStack drugItem(String drugName){
         DrugData data = loadData(drugName);
-        if (!(data.level==data.buffs.size()&&data.level==data.deBuffs.size())){
-            Bukkit.getLogger().info(drugName+"のBUFF,DEBUFF,LEVELのどれかの設定が正しくできていません" +
-                    "アイテムの作製を中断します");
-            return null;
-        }
         if (data.name == null){
             Bukkit.getLogger().info("表示名が入力されていません");
             return null;
@@ -89,30 +85,55 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent event){
-        DataBase.loadDataBase(mysql(),event.getPlayer());
+        loadDataBase(mysql(),event.getPlayer());
     }
 
     @EventHandler
     public void playerQuitEvent(PlayerQuitEvent event){
-        DataBase.loadDataBase(mysql(),event.getPlayer());
+        loadDataBase(mysql(),event.getPlayer());
     }
 
     @EventHandler
     public void useDrugEvent(PlayerInteractEvent event){
-        String drug;
-        for (int i = 0;i!=drugMap.size();i++){//使用ドラッグ特定
-            if (!(event.getItem() ==drugStack.get(drugName.get(i)))){
-                drug = drugName.get(i);
-                Bukkit.getLogger().info(event.getPlayer().getName()+"が"+drugName.get(i)+"を使いました");
+        for (Map.Entry<String, ItemStack> map : drugStack.entrySet()){
+            if (event.getItem()==map.getValue()){
+                Player player = event.getPlayer();
+                useDrug(map.getKey(),map.getValue(),player);
+                return;
+            }
+        }
+    }
+
+    public static void useDrug(String key, ItemStack stack, Player player){
+        String[] playerKey = {player.getName(),key};
+        DrugData data = loadData(key);
+        PlayerDrugData playerData = loadData(playerKey);
+        player.getInventory().remove(stack);
+        for (int i = 0;i!=data.level;i++){
+            if (playerData.level == i){
+                for (int i1 = 0;i1!=data.buffs.size();i1+=3) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buffs.get(i)[i1]),
+                            Integer.parseInt(data.buffs.get(i)[i1 + 1]),
+                            Integer.parseInt(data.buffs.get(i)[i1 + 2])));
+                }
+                for (int i1 = 0;i1!=data.deBuffs.size();i1+=3) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuffs.get(i)[i1]),
+                            Integer.parseInt(data.deBuffs.get(i)[i1 + 1]),
+                            Integer.parseInt(data.deBuffs.get(i)[i1 + 2])));
+                }
+            }
+        }
+        playerData.count ++;
+        for (int i = 0;i!=data.level;i++){
+            if (playerData.count == data.power*i){
+                playerData.level ++;
                 break;
             }
-            if(i==drugMap.size()-1)return;
-
         }
-        Player player = event.getPlayer();
-        player.getInventory().remove(event.getItem());
-
+        saveData(key,data);
+        saveData(playerKey,playerData);
     }
+
     public MySQLManager mysql(){
         MySQLManager mysql = new MySQLManager(this,"man10drugPlugin");
         return mysql;
