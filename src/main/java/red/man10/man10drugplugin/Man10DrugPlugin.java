@@ -55,23 +55,25 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             Bukkit.getLogger().info("読み込み処理を終了します");
             return;
         }
-        File[] drugData = drugFolder.listFiles();
+//        File[] drugData = drugFolder.listFiles();
+        List<File> drugData = new ArrayList<File>(Arrays.asList(drugFolder.listFiles()));
         if (drugData == null){
             Bukkit.getLogger().info("ドラックデータが見つかりません");
             Bukkit.getLogger().info("読み込みを終了します");
             return;
         }
         try {
-            for (int i = 0; i!=drugData.length;i++){
-                if (drugData[i].getName().equalsIgnoreCase("config.yml")||
-                !drugData[i].isFile()){
+            for (int i = 0; i!=drugData.size();i++){
+                if (drugData.get(i).getName().equalsIgnoreCase("config.yml")||
+                !drugData.get(i).isFile()){
+                    drugData.remove(drugData.get(i));
                     i--;
                     continue;
                 }
-                Bukkit.getLogger().info("loading..."+drugData[i].getName());
-                BufferedReader br = new BufferedReader(new FileReader(drugData[i]));
+                Bukkit.getLogger().info("loading..."+drugData.get(i).getName());
+                BufferedReader br = new BufferedReader(new FileReader(drugData.get(i)));
                 String str;
-                drugName.add(drugData[i].getName().replace(".txt",""));
+                drugName.add(drugData.get(i).getName().replace(".txt",""));
                 while ((str = br.readLine()) !=null){
                     LoadConfig(drugName.get(i),str);
                 }
