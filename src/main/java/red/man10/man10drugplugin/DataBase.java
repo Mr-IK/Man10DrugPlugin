@@ -50,11 +50,10 @@ public class DataBase {
                     data.level = rs.getInt("level");
                     data.time = rs.getInt("time");
                     Bukkit.getLogger().info(data.count+","+data.level+","+data.time);
+                    Bukkit.getLogger().info(player.getName()+" load DB");
                 }
                 rs.close();
                 saveData(key,data);
-                Bukkit.getLogger().info(player.getName()+" load DB");
-                return;
             } catch (Exception e) {
                 Bukkit.getLogger().info(e.toString());
             }
