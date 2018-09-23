@@ -38,7 +38,7 @@ public class MDPCommand implements CommandExecutor {
             if (args.length == 2){//args[1]...drugName
                 if (drugStack.get(args[1])==null){
                     player.sendMessage(chatMessage+"§4"+args[1]+"§aという名前の薬は見つかりませんでした。");
-                    player.sendMessage(chatMessage+"§a設定ファイルの”NAME”の項目に入力した薬の名前を入力してください");
+                    player.sendMessage(chatMessage+"§a設定ファイルの名前を入力してください(拡張子を含まない)");
                     return false;
                 }
                 player.getInventory().addItem(drugStack.get(args[1]));
@@ -124,7 +124,7 @@ public class MDPCommand implements CommandExecutor {
 
     void helpChat(Player player){
         player.sendMessage("§e§lMan10DrugPlugin HELP");
-        player.sendMessage("§e/mdp get [drugName] 薬を手に入れる drugNameは設定ファイルの”NAME”の項目を入力してください");
+        player.sendMessage("§e/mdp get [drugName] 薬を手に入れる drugNameは設定ファイルの名前を入力してください(拡張子を含まない)");
         player.sendMessage("§e/mdp load [player名] 薬の使用データを読み込みます player名を”all”にすると" +
                 "現在オンラインのすべてプレイヤーのデータを読み込みます");
         player.sendMessage("§e/mdp save [player名] 薬のデータを保存します player名を”all’にすると" +

@@ -77,7 +77,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
                 while ((str = br.readLine()) !=null){
                     LoadConfig(drugName.get(i),str);
                 }
-                drugStack.put(drugMap.get(drugName.get(i)).name,drugItem(drugName.get(i)));
+                drugStack.put(drugName.get(i),drugItem(drugName.get(i)));
 
 
             }
