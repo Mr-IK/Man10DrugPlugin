@@ -44,6 +44,9 @@ public class DataBase {
                             player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0);";
                     mysql.execute(sql);
                     Bukkit.getLogger().info(player.getName()+" insert DB");
+                    sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
+                            "' and drug_name='"+ drugName.get(i)+"';";
+                    rs = mysql.query(sql);
                 }
                 while (rs.next()){
                     data.count = rs.getInt("count");

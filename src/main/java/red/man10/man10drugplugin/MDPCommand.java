@@ -6,6 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Iterator;
+
+import static red.man10.man10drugplugin.DataBase.playerHash;
 import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 import static red.man10.man10drugplugin.Man10DrugPlugin.*;
 
@@ -82,6 +85,22 @@ public class MDPCommand implements CommandExecutor {
                 DataBase.saveDataBase(mysql,p);
             }
             player.sendMessage(chatMessage+"§aコンフィグ再読み込み");
+
+            Iterator<String> drugIt = drugMap.keySet().iterator();
+
+            while(drugIt.hasNext()) {
+                String key = drugIt.next();
+                if(key.equals(key)) {
+                    drugIt.remove();
+                }
+            }
+            Iterator<String[]> playerIt = playerHash.keySet().iterator();
+            while(playerIt.hasNext()) {
+                String[] key = playerIt.next();
+                if(key.equals(key)) {
+                    playerIt.remove();
+                }
+            }
             Man10DrugPlugin.drugDataLoad();
             player.sendMessage(chatMessage+"§aプレイヤーデータ読み込み");
             for (Player p : Bukkit.getServer().getOnlinePlayers()){
@@ -96,9 +115,9 @@ public class MDPCommand implements CommandExecutor {
             player.sendMessage(chatMessage+"§a"+args[1]+"の§a"+args[2]+"の使用情報");
             try {
                 String[] key = {args[1],args[2]};
-                player.sendMessage(chatMessage+"§e使用回数§a"+DataBase.playerHash.get(key).count);
-                player.sendMessage(chatMessage+"§e現在のレベル§a"+DataBase.playerHash.get(key).level);
-                player.sendMessage(chatMessage+"§e最後に使用してからの経過時間§a"+DataBase.playerHash.get(key).time);
+                player.sendMessage(chatMessage+"§e使用回数§a"+ playerHash.get(key).count);
+                player.sendMessage(chatMessage+"§e現在のレベル§a"+ playerHash.get(key).level);
+                player.sendMessage(chatMessage+"§e最後に使用してからの経過時間§a"+ playerHash.get(key).time);
             }catch (NullPointerException e ){
                 player.sendMessage(chatMessage+"§4使用情報を取得できませんでした");
                 Bukkit.getLogger().info(e.toString());
@@ -112,7 +131,7 @@ public class MDPCommand implements CommandExecutor {
             }
         }
         if (cmd.equalsIgnoreCase("insert")){
-            String sql = "INSERT INTO man10drugPlugin.drug VALUES('"+ 
+            String sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
                     Bukkit.getPlayer(args[1]).getUniqueId()
                     +"','"+Bukkit.getPlayer(args[1]).getName()+"','"+args[2]+"',0,0,0);";
             mysql.execute(sql);
