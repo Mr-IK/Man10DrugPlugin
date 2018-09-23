@@ -60,7 +60,8 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         }
         try {
             for (int i = 0; i!=drugData.length;i++){
-                if (drugData[i].getName().equalsIgnoreCase("config.yml")){
+                if (drugData[i].getName().equalsIgnoreCase("config.yml")||
+                !drugData[i].isFile()){
                     continue;
                 }
                 Bukkit.getLogger().info("loading..."+drugData[i].getName());
@@ -104,7 +105,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void playerQuitEvent(PlayerQuitEvent event){
-        loadDataBase(mysql,event.getPlayer());
+        saveDataBase(mysql,event.getPlayer());
     }
 
     @EventHandler

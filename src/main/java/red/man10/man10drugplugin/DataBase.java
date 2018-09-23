@@ -32,34 +32,36 @@ public class DataBase {
         ResultSet rs = null;
         String[] key = new String[2];
         key[0] = player.getName();
+        boolean insert = false;
         for (int i = 0;i!=drugName.size();i++){
             key[1] = drugName.get(i);
             PlayerDrugData data = loadData(key);
             String sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
-                    "'and drug_name='"+ drugName.get(i)+"';";
+                    "' and drug_name='"+ drugName.get(i)+"';";
             rs = mysql.query(sql);
             try {
-                data.count = rs.getInt("count");
-                data.level = rs.getInt("level");
-                data.time = rs.getInt("time");
+                while (rs.next()){
+                    data.count = rs.getInt("count");
+                    data.level = rs.getInt("level");
+                    data.time = rs.getInt("time");
+                    insert = true;
+                }
+                if (!insert){
+                    break;
+                }
                 rs.close();
-                mysql.close();
                 saveData(key,data);
                 Bukkit.getLogger().info(player.getName()+" load DB");
-            } catch (SQLException e) {
-//                sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
-//                player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0;";
-//                mysql.execute(sql);
-//                Bukkit.getLogger().info(player.getName()+" insert DB");
-//                Bukkit.getLogger().info("SQLException");
-            }catch (Exception e){
-                sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
-                        player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0;";
-                mysql.execute(sql);
-                Bukkit.getLogger().info(player.getName()+" insert DB");
-                Bukkit.getLogger().info("exception");
+                return;
+            } catch (Exception e) {
+                Bukkit.getLogger().info(e.toString());
             }
-
+            sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
+                    player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0);";
+            mysql.execute(sql);
+            Bukkit.getLogger().info(player.getName()+" insert DB");
+            i--;
+            continue;
         }
     }
     public static void saveDataBase(MySQLManager mysql ,Player player){
