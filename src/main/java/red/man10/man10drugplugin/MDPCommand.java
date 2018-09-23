@@ -101,6 +101,7 @@ public class MDPCommand implements CommandExecutor {
                 player.sendMessage(chatMessage+"§e最後に使用してからの経過時間§a"+DataBase.playerHash.get(key).time);
             }catch (NullPointerException e ){
                 player.sendMessage(chatMessage+"§4使用情報を取得できませんでした");
+                Bukkit.getLogger().info(e.toString());
             }
             return true;
         }

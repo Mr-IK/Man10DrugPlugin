@@ -6,6 +6,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -110,11 +112,18 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void useDrugEvent(PlayerInteractEvent event){
-        for (Map.Entry<String, ItemStack> map : drugStack.entrySet()){
-            if (event.getItem()==map.getValue()){
-                Player player = event.getPlayer();
-                useDrug(map.getKey(),map.getValue(),player);
-                return;
+        if (event.getAction() == Action.RIGHT_CLICK_AIR
+                || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player player = event.getPlayer();
+            ItemStack item = player.getInventory().getItemInMainHand();
+            if (item.getType() == Material.AIR)return;
+            Bukkit.getLogger().info("click event");
+            for (Map.Entry<String, ItemStack> map : drugStack.entrySet()) {
+                if (item == map.getValue()) {
+                    Bukkit.getLogger().info(player.getName()+" used "+map.getKey());
+                    useDrug(map.getKey(), map.getValue(), player);
+                    return;
+                }
             }
         }
     }
