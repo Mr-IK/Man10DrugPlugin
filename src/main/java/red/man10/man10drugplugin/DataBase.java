@@ -38,13 +38,13 @@ public class DataBase {
             String sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
                     "' and drug_name='"+ drugName.get(i)+"';";
             rs = mysql.query(sql);
-            if (rs == null){
-                sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
-                        player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0);";
-                mysql.execute(sql);
-                Bukkit.getLogger().info(player.getName()+" insert DB");
-            }
             try {
+                if (rs == null||!rs.next()){
+                    sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
+                            player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0);";
+                    mysql.execute(sql);
+                    Bukkit.getLogger().info(player.getName()+" insert DB");
+                }
                 while (rs.next()){
                     data.count = rs.getInt("count");
                     data.level = rs.getInt("level");
