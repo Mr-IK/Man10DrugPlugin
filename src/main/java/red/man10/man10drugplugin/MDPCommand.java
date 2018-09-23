@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 import static red.man10.man10drugplugin.Man10DrugPlugin.*;
 
 public class MDPCommand implements CommandExecutor {
@@ -88,6 +89,27 @@ public class MDPCommand implements CommandExecutor {
             }
             return true;
         }
+        if (cmd.equalsIgnoreCase("show")){
+            if (args.length != 3){
+                return true;
+            }
+            player.sendMessage(chatMessage+"§a"+args[1]+"の§a"+args[2]+"の使用情報");
+            try {
+                String[] key = {args[1],args[2]};
+                player.sendMessage(chatMessage+"§e使用回数§a"+DataBase.playerHash.get(key).count);
+                player.sendMessage(chatMessage+"§e現在のレベル§a"+DataBase.playerHash.get(key).level);
+                player.sendMessage(chatMessage+"§e最後に使用してからの経過時間§a"+DataBase.playerHash.get(key).time);
+            }catch (NullPointerException e ){
+                player.sendMessage(chatMessage+"§4使用情報を取得できませんでした");
+            }
+            return true;
+        }
+        if (cmd.equalsIgnoreCase("drugName")){
+            player.sendMessage(chatMessage+"§e読み込まれているドラッグ一覧");
+            for (int i = 0;i!=drugName.size();i++){
+                player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+drugMap.get(drugName.get(i)).name);
+            }
+        }
         return true;
 
     }
@@ -100,6 +122,8 @@ public class MDPCommand implements CommandExecutor {
         player.sendMessage("§e/mdp save [player名] 薬のデータを保存します player名を”all’にすると" +
                 "現在オンラインのすべてのプレイヤーのデータを保存します");
         player.sendMessage("§e/mdp reload 薬の設定ファイルを再読込みします");
+        player.sendMessage("§e/mdp show [player名] [drugName] 薬の使用情報を見ることができます");
+        player.sendMessage("§e/mdp drugName 読み込まれている薬の名前を表示します");
     }
 
 }
