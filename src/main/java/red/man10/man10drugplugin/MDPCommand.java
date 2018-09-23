@@ -110,6 +110,13 @@ public class MDPCommand implements CommandExecutor {
                 player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+drugMap.get(drugName.get(i)).name);
             }
         }
+        if (cmd.equalsIgnoreCase("insert")){
+            String sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
+                    Bukkit.getPlayer(args[1]).getUniqueId()
+                    +"','"+Bukkit.getPlayer(args[1])+"','"+args[2]+"',0,0,0);";
+            mysql.execute(sql);
+
+        }
         return true;
 
     }
