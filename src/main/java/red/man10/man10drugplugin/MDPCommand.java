@@ -55,7 +55,7 @@ public class MDPCommand implements CommandExecutor {
                     player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを保存しました");
                     return true;
                 }
-                DataBase.loadDataBase(mysql,Bukkit.getPlayer(args[1]));
+                DataBase.saveDataBase(mysql,Bukkit.getPlayer(args[1]));
                 player.sendMessage(chatMessage+"§a"+args[1]+"§bのドラッグデータを保存しました");
                 return true;
             }
@@ -65,7 +65,7 @@ public class MDPCommand implements CommandExecutor {
                 if (args[1].equalsIgnoreCase("all")){
                     Bukkit.broadcastMessage(chatMessage+"§4§lMan10DrugPluginをリロードします");
                     for (Player p : Bukkit.getServer().getOnlinePlayers()){
-                        DataBase.saveDataBase(mysql,p);
+                        DataBase.loadDataBase(mysql,p);
                     }
                     player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを読み込みました");
                     return true;
@@ -82,7 +82,7 @@ public class MDPCommand implements CommandExecutor {
             }
             player.sendMessage(chatMessage+"§aコンフィグ再読み込み");
             Man10DrugPlugin.drugDataLoad();
-            player.sendMessage("プレイヤーデータ読み込み");
+            player.sendMessage(chatMessage+"§aプレイヤーデータ読み込み");
             for (Player p : Bukkit.getServer().getOnlinePlayers()){
                 DataBase.loadDataBase(mysql,p);
             }

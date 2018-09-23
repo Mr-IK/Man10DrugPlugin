@@ -27,14 +27,15 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
     static List<String> drugName = new ArrayList<String>();//薬の名前
     static HashMap<String,ItemStack> drugStack = new HashMap<String, ItemStack>();//key,drugMap.name
     FileConfiguration config;
+    MySQLManager mysql;
 
     @Override
     public void onEnable() {
-        getCommand("mdp").setExecutor(new MDPCommand(this,mysql()));
+        mysql = new MySQLManager(this,"man10drugPlugin");
+        getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
         saveDefaultConfig();
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         config = getConfig();
-        mysql();
         drugDataLoad();//load config
     }
 
@@ -98,12 +99,12 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent event){
-        loadDataBase(mysql(),event.getPlayer());
+        loadDataBase(mysql,event.getPlayer());
     }
 
     @EventHandler
     public void playerQuitEvent(PlayerQuitEvent event){
-        loadDataBase(mysql(),event.getPlayer());
+        loadDataBase(mysql,event.getPlayer());
     }
 
     @EventHandler
@@ -147,8 +148,4 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         saveData(playerKey,playerData);
     }
 
-    public MySQLManager mysql(){
-        MySQLManager mysql = new MySQLManager(this,"man10drugPlugin");
-        return mysql;
-    }
 }

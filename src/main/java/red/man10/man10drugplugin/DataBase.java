@@ -28,14 +28,6 @@ public class DataBase {
     static PlayerDrugData saveData(String[] key,PlayerDrugData data){
         return playerHash.put(key,data);
     }
-//    public static void createDataBase(MySQLManager mysql){
-//        String sql = "CREATE DATABASE man10drugPlugin;";
-//        mysql.execute(sql);
-//        sql = "CREATE TABLE man10drugPlugin.drug (uuid text,player text,drug_name text," +
-//                "count int, level int,time int);";
-//        mysql.execute(sql);
-//
-//    }
     public static void loadDataBase(MySQLManager mysql, Player player){
         ResultSet rs = null;
         String[] key = new String[2];
@@ -44,21 +36,22 @@ public class DataBase {
             key[1] = drugName.get(i);
             PlayerDrugData data = loadData(key);
             String sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
-                    "',drug_name='"+ drugName.get(i)+"';";
+                    "'and drug_name='"+ drugName.get(i)+"';";
             rs = mysql.query(sql);
             try {
                 data.count = rs.getInt("count");
                 data.level = rs.getInt("level");
                 data.time = rs.getInt("time");
                 rs.close();
+                mysql.close();
                 saveData(key,data);
                 Bukkit.getLogger().info(player.getName()+" load DB");
             } catch (SQLException e) {
-                sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
-                player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0;";
-                mysql.execute(sql);
-                Bukkit.getLogger().info(player.getName()+" insert DB");
-                Bukkit.getLogger().info("SQLException");
+//                sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
+//                player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0;";
+//                mysql.execute(sql);
+//                Bukkit.getLogger().info(player.getName()+" insert DB");
+//                Bukkit.getLogger().info("SQLException");
             }catch (Exception e){
                 sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
                         player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0;";
@@ -76,7 +69,7 @@ public class DataBase {
             key[1] = drugName.get(i);
             PlayerDrugData data = loadData(key);
             String sql = "UPDATE man10drugPlugin.drug SET count="+data.count+",level="+data.level+
-                    ",time="+data.time+" WHERE uuid='"+player.getUniqueId()+"',drug_name='"
+                    ",time="+data.time+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
         }

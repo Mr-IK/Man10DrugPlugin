@@ -43,7 +43,7 @@ public class MySQLManager {
         if(!this.connected) {
             plugin.getLogger().info("Unable to establish a MySQL connection.");
         }
-        execute("CREATE TABLE man10drugPlugin.drug (uuid text,player text,drug_name text," +
+        execute("CREATE TABLE if not exists man10drugPlugin.drug (uuid text,player text,drug_name text," +
                 "count int, level int,time int);");
     }
 
