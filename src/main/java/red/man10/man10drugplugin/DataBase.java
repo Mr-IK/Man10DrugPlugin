@@ -1,5 +1,6 @@
 package red.man10.man10drugplugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
@@ -49,10 +50,12 @@ public class DataBase {
                 data.time = rs.getInt("time");
                 rs.close();
                 saveData(key,data);
+                Bukkit.getLogger().info(player.getName()+" load DB");
             } catch (SQLException e) {
                 sql = "INSERT INTO man10drugPlugin VALUES('"+
                 player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"'0,0,0;";
                 mysql.execute(sql);
+                Bukkit.getLogger().info(player.getName()+" insert DB");
                 e.printStackTrace();
             }
 
@@ -69,5 +72,6 @@ public class DataBase {
                     +drugName.get(i)+"';";
             mysql.execute(sql);
         }
+        Bukkit.getLogger().info(player.getName()+ " save DB");
     }
 }

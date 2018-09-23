@@ -20,11 +20,11 @@ public class LoadConfigData {
         DrugData data = loadData(drugName);
         String[] str = brLine.split(":");
         switch (str[0]){
-            case "NAME":data.name = str[1];break;
-            case "MATERIAL":data.material = str[1];break;
-            case "DAMAGE":data.damage = Short.parseShort(str[1]);break;
-            case "LEVEL":data.level = Integer.parseInt(str[1]);break;
-            case "POWER":data.power = Integer.parseInt(str[1]);break;
+            case "NAME":data.name = str[1];break;//必須
+            case "MATERIAL":data.material = str[1];break;//必須
+            case "DAMAGE":data.damage = Short.parseShort(str[1]);break;//def 0
+            case "LEVEL":data.level = Integer.parseInt(str[1]);break;//def 0
+            case "POWER":data.power = Integer.parseInt(str[1]);break;//def 0
             case "BUFF":{
                 String[] buffLevel = str[1].split("/");
                 for (int i = 0;i!=buffLevel.length;i++){

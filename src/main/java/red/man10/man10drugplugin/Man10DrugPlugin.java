@@ -84,6 +84,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         }
         ItemStack drug = new ItemStack(Material.valueOf(data.material),1,data.damage);
         drug.getItemMeta().setDisplayName(data.name);
+        drug.getItemMeta().setLocalizedName(data.name);
         return drug;
     }
 
