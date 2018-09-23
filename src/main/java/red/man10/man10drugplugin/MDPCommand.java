@@ -86,6 +86,7 @@ public class MDPCommand implements CommandExecutor {
             for (Player p : Bukkit.getServer().getOnlinePlayers()){
                 DataBase.loadDataBase(mysql,p);
             }
+            return true;
         }
         return true;
 

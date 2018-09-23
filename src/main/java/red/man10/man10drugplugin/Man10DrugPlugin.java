@@ -2,6 +2,7 @@ package red.man10.man10drugplugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,12 +26,16 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     static List<String> drugName = new ArrayList<String>();//薬の名前
     static HashMap<String,ItemStack> drugStack = new HashMap<String, ItemStack>();//key,drugMap.name
-
+    FileConfiguration config;
 
     @Override
     public void onEnable() {
-        drugDataLoad();//load config
         getCommand("mdp").setExecutor(new MDPCommand(this,mysql()));
+        saveDefaultConfig();
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
+        config = getConfig();
+        mysql();
+        drugDataLoad();//load config
     }
 
     @Override
@@ -54,6 +59,9 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         }
         try {
             for (int i = 0; i!=drugData.length;i++){
+                if (drugData[i].getName().equalsIgnoreCase("config.yml")){
+                    continue;
+                }
                 Bukkit.getLogger().info("loading..."+drugData[i].getName());
                 BufferedReader br = new BufferedReader(new FileReader(drugData[i]));
                 String str;
