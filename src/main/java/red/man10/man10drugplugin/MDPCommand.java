@@ -63,6 +63,7 @@ public class MDPCommand implements CommandExecutor {
         if (cmd.equalsIgnoreCase("load")){
             if (args.length == 2){
                 if (args[1].equalsIgnoreCase("all")){
+                    Bukkit.broadcastMessage(chatMessage+"§4§lMan10DrugPluginをリロードします");
                     for (Player p : Bukkit.getServer().getOnlinePlayers()){
                         DataBase.saveDataBase(mysql,p);
                     }

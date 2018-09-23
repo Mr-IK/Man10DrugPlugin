@@ -78,6 +78,10 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             Bukkit.getLogger().info("表示名が入力されていません");
             return null;
         }
+        if (data.material == null){
+            Bukkit.getLogger().info("マテリアルが入力されていません");
+            return null;
+        }
         ItemStack drug = new ItemStack(Material.valueOf(data.material),1,data.damage);
         drug.getItemMeta().setDisplayName(data.name);
         return drug;

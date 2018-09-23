@@ -50,9 +50,9 @@ public class LoadConfigData {
     static class DrugData{
         String name;//表示名
         String material;//薬にするアイテム
-        short damage;//アイテムのダメージ値
-        int level;//何段階にするか
-        int power;//指定回数使用でレベルアップ
+        short damage = 0;//アイテムのダメージ値
+        int level = 0;//何段階にするか
+        int power = 0;//指定回数使用でレベルアップ
         HashMap<Integer,String[]> buffs = new HashMap<Integer, String[]>();//ポーション名、時間、レベル
         HashMap<Integer,String[]> deBuffs = new HashMap<Integer, String[]>();
     }
