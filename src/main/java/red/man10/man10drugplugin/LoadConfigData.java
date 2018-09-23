@@ -5,7 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /*
 drugName...拡張子を含まないファイル名
@@ -41,6 +43,7 @@ public class LoadConfigData {
                 }
                 break;
             }
+            case "LORE":data.lore.add(str[1]);break;
         }
         saveData(drugName,data);
 
@@ -55,6 +58,7 @@ public class LoadConfigData {
         int power = 0;//指定回数使用でレベルアップ
         HashMap<Integer,String[]> buffs = new HashMap<Integer, String[]>();//ポーション名、時間、レベル
         HashMap<Integer,String[]> deBuffs = new HashMap<Integer, String[]>();
+        List<String> lore = new ArrayList<String>();
     }
 
     public static HashMap<String,DrugData> drugMap = new HashMap<String, DrugData>();//key...drugName
