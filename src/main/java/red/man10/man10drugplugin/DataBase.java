@@ -56,7 +56,13 @@ public class DataBase {
                 player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"'0,0,0;";
                 mysql.execute(sql);
                 Bukkit.getLogger().info(player.getName()+" insert DB");
-                e.printStackTrace();
+                Bukkit.getLogger().info("SQLException");
+            }catch (Exception e){
+                sql = "INSERT INTO man10drugPlugin VALUES('"+
+                        player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"'0,0,0;";
+                mysql.execute(sql);
+                Bukkit.getLogger().info(player.getName()+" insert DB");
+                Bukkit.getLogger().info("exception");
             }
 
         }
