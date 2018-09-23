@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -64,6 +65,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             for (int i = 0; i!=drugData.length;i++){
                 if (drugData[i].getName().equalsIgnoreCase("config.yml")||
                 !drugData[i].isFile()){
+                    i--;
                     continue;
                 }
                 Bukkit.getLogger().info("loading..."+drugData[i].getName());
@@ -95,8 +97,8 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             return null;
         }
         ItemStack drug = new ItemStack(Material.valueOf(data.material),1,data.damage);
-        drug.getItemMeta().setDisplayName(data.name);
-        drug.getItemMeta().setLocalizedName(data.name);
+        ItemMeta meta = drug.getItemMeta();
+        meta.setDisplayName(data.name);
         return drug;
     }
 
@@ -120,7 +122,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             Bukkit.getLogger().info("click event");
             for (Map.Entry<String, ItemStack> map : drugStack.entrySet()) {
                 if (item == map.getValue()) {
-                    Bukkit.getLogger().info(player.getName()+" used "+map.getKey());
+                    Bukkit.getLogger().info(player.getName()+" used "+map.getKey()  );
                     useDrug(map.getKey(), map.getValue(), player);
                     return;
                 }
