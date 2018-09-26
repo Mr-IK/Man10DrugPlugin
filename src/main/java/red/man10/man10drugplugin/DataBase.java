@@ -30,10 +30,8 @@ public class DataBase {
     }
     public static void loadDataBase(MySQLManager mysql, Player player){
         ResultSet rs = null;
-        String[] key = new String[2];
-        key[0] = player.getName();
         for (int i = 0;i!=drugName.size();i++){
-            key[1] = drugName.get(i);
+            String[] key = {player.getName(),drugName.get(i)};
             PlayerDrugData data = loadData(key);
             String sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
                     "' and drug_name='"+ drugName.get(i)+"';";
@@ -48,13 +46,20 @@ public class DataBase {
                             "' and drug_name='"+ drugName.get(i)+"';";
                     rs = mysql.query(sql);
                 }
-                while (rs.next()){
-                    data.count = rs.getInt("count");
-                    data.level = rs.getInt("level");
-                    data.time = rs.getInt("time");
-                    Bukkit.getLogger().info(data.count+","+data.level+","+data.time);
-                    Bukkit.getLogger().info(player.getName()+" load DB");
-                }
+//                rs.beforeFirst();
+                rs.next();
+                data.count = rs.getInt("count");
+                data.level = rs.getInt("level");
+                data.time = rs.getInt("time");
+                Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+i);
+
+//                while (rs.next()){
+//                    data.count = rs.getInt("count");
+//                    data.level = rs.getInt("level");
+//                    data.time = rs.getInt("time");
+//                    Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+i);
+//                    break;
+//                }
                 rs.close();
                 saveData(key,data);
             } catch (Exception e) {

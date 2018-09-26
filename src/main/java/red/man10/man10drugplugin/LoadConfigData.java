@@ -28,18 +28,18 @@ public class LoadConfigData {
             case "LEVEL":data.level = Integer.parseInt(str[1]);break;//def 0
             case "POWER":data.power = Integer.parseInt(str[1]);break;//def 0
             case "BUFF":{
-                String[] buffLevel = str[1].split("/");
+                String[] buffLevel = str[1].split("/",0);
                 for (int i = 0;i!=buffLevel.length;i++){
-                    String[] buff = buffLevel[i].split(",");
-                    data.buffs.put(i+1,buff);//level分けようにナンバーをふる
+                    String[] buff = buffLevel[i].split(",",0);
+                    data.buffs.put(i,buff);//level分けようにナンバーをふる
                 }
                 break;
             }
             case "DEBUFF":{
-                String[] buffLevel = str[1].split("/");
+                String[] buffLevel = str[1].split("/",0);
                 for (int i = 0;i!=buffLevel.length;i++){
-                    String[] buff = buffLevel[i].split(",");
-                    data.deBuffs.put(i+1,buff);//level分けようにナンバーをふる
+                    String[] buff = buffLevel[i].split(",",0);
+                    data.deBuffs.put(i,buff);//level分けようにナンバーをふる
                 }
                 break;
             }

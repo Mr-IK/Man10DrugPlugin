@@ -29,6 +29,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     static List<String> drugName = new ArrayList<String>();//薬の名前
     static HashMap<String,ItemStack> drugStack = new HashMap<String, ItemStack>();//key,drugMap.name
+    static List<String> loreData = new ArrayList<String>();//lore
     FileConfiguration config;
     MySQLManager mysql;
 
@@ -98,11 +99,24 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             Bukkit.getLogger().info("マテリアルが入力されていません");
             return null;
         }
-        ItemStack drug = new ItemStack(Material.valueOf(data.material),1,data.damage);
+        ItemStack drug = new ItemStack(Material.valueOf(data.material),1);
         ItemMeta meta = drug.getItemMeta();
         meta.setDisplayName(data.name);
-        if (data.lore!=null){
+        StringBuffer l = new StringBuffer();
+        char[] nameData = drugName.toCharArray();
+        for (int i = 0;i!=nameData.length;i++){//loreで認識するために
+            l.append("§").append(nameData[i]);
+        }
+        loreData.add(String.valueOf(l));
+        try {
+            l.append(data.lore.get(0));
+            data.lore.set(0, String.valueOf(l));
             meta.setLore(data.lore);
+        }catch (IndexOutOfBoundsException e){
+            meta.setLore(Collections.singletonList(String.valueOf(l)));
+        }
+        if (!(data.damage == 0)){
+            drug.setDurability(data.damage);
         }
         drug.setItemMeta(meta);
         return drug;
@@ -126,10 +140,14 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             ItemStack item = player.getInventory().getItemInMainHand();
             if (item.getType() == Material.AIR)return;
             Bukkit.getLogger().info("click event");
-            for (Map.Entry<String, ItemStack> map : drugStack.entrySet()) {
-                if (item == map.getValue()) {
-                    Bukkit.getLogger().info(player.getName()+" used "+map.getKey()  );
-                    useDrug(map.getKey(), map.getValue(), player);
+            if (item.getItemMeta().getLore() == null||
+                    item.getItemMeta().getLore().isEmpty())return;
+            for (int i = 0;i!=loreData.size();i++){
+                if (item.getItemMeta().getLore().get(0).startsWith(loreData.get(i))){
+                    Bukkit.getLogger().info("use event,"+loreData.get(i));
+                    String key = loreData.get(i).replaceAll("§","");
+                    useDrug(key, item, player);
+                    Bukkit.getLogger().info(player.getName()+" used "+key );
                     return;
                 }
             }
@@ -138,15 +156,16 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     public static void useDrug(String key, ItemStack stack, Player player){
         String[] playerKey = {player.getName(),key};
-        DrugData data = loadData(key);
-        PlayerDrugData playerData = loadData(playerKey);
-        player.getInventory().remove(stack);
+        DrugData data = drugMap.get(key);
+        PlayerDrugData playerData = playerHash.get(playerKey);
         for (int i = 0;i!=data.level;i++){
+            Bukkit.getLogger().info("level check");
             if (playerData.level == i){
                 for (int i1 = 0;i1!=data.buffs.size();i1+=3) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buffs.get(i)[i1]),
                             Integer.parseInt(data.buffs.get(i)[i1 + 1]),
                             Integer.parseInt(data.buffs.get(i)[i1 + 2])));
+                    Bukkit.getLogger().info("add potion");
                 }
                 for (int i1 = 0;i1!=data.deBuffs.size();i1+=3) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuffs.get(i)[i1]),
@@ -162,6 +181,7 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
                 break;
             }
         }
+        player.getInventory().remove(stack);
         saveData(key,data);
         saveData(playerKey,playerData);
     }
