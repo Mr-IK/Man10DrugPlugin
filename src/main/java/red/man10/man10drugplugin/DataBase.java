@@ -29,7 +29,7 @@ public class DataBase {
         return playerHash.put(key,data);
     }
     public static void loadDataBase(MySQLManager mysql, Player player){
-        ResultSet rs = null;
+        ResultSet rs;
         for (int i = 0;i!=drugName.size();i++){
             String[] key = {player.getName(),drugName.get(i)};
             PlayerDrugData data = loadData(key);
@@ -51,7 +51,7 @@ public class DataBase {
                 data.count = rs.getInt("count");
                 data.level = rs.getInt("level");
                 data.time = rs.getInt("time");
-                Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+i);
+                Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+","+i+","+data.count);
 
 //                while (rs.next()){
 //                    data.count = rs.getInt("count");

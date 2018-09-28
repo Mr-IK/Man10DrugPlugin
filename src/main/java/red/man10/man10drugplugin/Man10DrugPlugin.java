@@ -3,28 +3,17 @@ package red.man10.man10drugplugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.io.*;
 import java.util.*;
 
-import static red.man10.man10drugplugin.DataBase.*;
-import static red.man10.man10drugplugin.MDPCommand.*;
 import static red.man10.man10drugplugin.LoadConfigData.*;
 
-public final class Man10DrugPlugin extends JavaPlugin implements Listener {
+public final class Man10DrugPlugin extends JavaPlugin {
 
     static List<String> drugName = new ArrayList<String>();//薬の名前
     static HashMap<String,ItemStack> drugStack = new HashMap<String, ItemStack>();//key,drugMap.name
@@ -34,11 +23,11 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        mysql = new MySQLManager(this,"man10drugPlugin");
-        getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
         saveDefaultConfig();
         config = getConfig();
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
+        mysql = new MySQLManager(this,"man10drugPlugin");
+        getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
+        Bukkit.getServer().getPluginManager().registerEvents(new MDPEvents(this,mysql), this);
         drugDataLoad();//load config
     }
 
@@ -55,7 +44,6 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
             Bukkit.getLogger().info("読み込み処理を終了します");
             return;
         }
-//        File[] drugData = drugFolder.listFiles();
         List<File> drugData = new ArrayList<File>(Arrays.asList(drugFolder.listFiles()));
         if (drugData == null){
             Bukkit.getLogger().info("ドラックデータが見つかりません");
@@ -121,72 +109,5 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         return drug;
     }
 
-    @EventHandler
-    public void playerJoinEvent(PlayerJoinEvent event){
-        loadDataBase(mysql,event.getPlayer());
-    }
-
-    @EventHandler
-    public void playerQuitEvent(PlayerQuitEvent event){
-        saveDataBase(mysql,event.getPlayer());
-    }
-
-    @EventHandler
-    public void useDrugEvent(PlayerInteractEvent event){
-        if (event.getAction() == Action.RIGHT_CLICK_AIR
-                || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Player player = event.getPlayer();
-            ItemStack item = player.getInventory().getItemInMainHand();
-            if (item.getType() == Material.AIR)return;
-            Bukkit.getLogger().info("click event");
-            if (item.getItemMeta().getLore() == null||
-                    item.getItemMeta().getLore().isEmpty())return;
-            for (int i = 0;i!=loreData.size();i++){
-                if (item.getItemMeta().getLore().get(0).startsWith(loreData.get(i))){
-                    Bukkit.getLogger().info("use event,"+loreData.get(i));
-                    String key = loreData.get(i).replaceAll("§","");
-                    useDrug(key, item, player);
-                    Bukkit.getLogger().info(player.getName()+" used "+key );
-                    return;
-                }
-            }
-        }
-    }
-
-    public static void useDrug(String key, ItemStack stack, Player player){
-        String[] playerKey = {player.getName(),key};
-        DrugData data = drugMap.get(key);
-        PlayerDrugData playerData = playerHash.get(playerKey);
-        if (data==null||playerData==null){
-            player.sendMessage(chatMessage+"§2今は薬を吸う気分ではないようだ");
-            return;
-        }
-        for (int i = 0;i!=data.level;i++){
-            Bukkit.getLogger().info("level check");
-            if (playerData.level == i){
-                for (int i1 = 0;i1!=data.buffs.size();i1+=3) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buffs.get(i)[i1]),
-                            Integer.parseInt(data.buffs.get(i)[i1 + 1]),
-                            Integer.parseInt(data.buffs.get(i)[i1 + 2])));
-                    Bukkit.getLogger().info("add potion");
-                }
-                for (int i1 = 0;i1!=data.deBuffs.size();i1+=3) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuffs.get(i)[i1]),
-                            Integer.parseInt(data.deBuffs.get(i)[i1 + 1]),
-                            Integer.parseInt(data.deBuffs.get(i)[i1 + 2])));
-                }
-            }
-        }
-        playerData.count ++;
-        for (int i = 0;i!=data.level;i++){
-            if (playerData.count == data.power*i){
-                playerData.level ++;
-                break;
-            }
-        }
-        player.getInventory().remove(stack);
-        saveData(key,data);
-        saveData(playerKey,playerData);
-    }
 
 }
