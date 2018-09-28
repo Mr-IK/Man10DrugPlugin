@@ -21,9 +21,8 @@ import java.io.*;
 import java.util.*;
 
 import static red.man10.man10drugplugin.DataBase.*;
+import static red.man10.man10drugplugin.MDPCommand.*;
 import static red.man10.man10drugplugin.LoadConfigData.*;
-import static red.man10.man10drugplugin.LoadConfigData.LoadConfig;
-import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 
 public final class Man10DrugPlugin extends JavaPlugin implements Listener {
 
@@ -38,8 +37,8 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         mysql = new MySQLManager(this,"man10drugPlugin");
         getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
         saveDefaultConfig();
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
         config = getConfig();
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
         drugDataLoad();//load config
     }
 
@@ -158,6 +157,10 @@ public final class Man10DrugPlugin extends JavaPlugin implements Listener {
         String[] playerKey = {player.getName(),key};
         DrugData data = drugMap.get(key);
         PlayerDrugData playerData = playerHash.get(playerKey);
+        if (data==null||playerData==null){
+            player.sendMessage(chatMessage+"§2今は薬を吸う気分ではないようだ");
+            return;
+        }
         for (int i = 0;i!=data.level;i++){
             Bukkit.getLogger().info("level check");
             if (playerData.level == i){

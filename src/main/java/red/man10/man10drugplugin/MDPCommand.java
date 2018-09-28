@@ -15,7 +15,7 @@ import static red.man10.man10drugplugin.Man10DrugPlugin.*;
 public class MDPCommand implements CommandExecutor {
     final String  permissionErrorString = "§4§lYou don't have permission.";
     final String permission = "man10drug.useCmd";
-    final String chatMessage = "§5[Man10DrugPlugin]";
+    static final String chatMessage = "§5[Man10DrugPlugin]";
     Man10DrugPlugin plugin;
     MySQLManager mysql;
     public MDPCommand(Man10DrugPlugin plugin, MySQLManager mysql) {
