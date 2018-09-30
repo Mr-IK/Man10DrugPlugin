@@ -15,6 +15,7 @@ public class DataBase {
         int count;
         int level;
         int time;
+        DrugTimer drugTimer;
     }
     static HashMap<String[],PlayerDrugData> playerHash = new HashMap<String[], PlayerDrugData>();
 //key...playerName,drugName
@@ -51,7 +52,9 @@ public class DataBase {
                 data.count = rs.getInt("count");
                 data.level = rs.getInt("level");
                 data.time = rs.getInt("time");
-                Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+","+i+","+data.count);
+                Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+","+i+",");
+                Bukkit.getLogger().info(key[0]+key[1]);
+                Bukkit.getLogger().info(data.count+","+data.time+","+data.level);
 
 //                while (rs.next()){
 //                    data.count = rs.getInt("count");

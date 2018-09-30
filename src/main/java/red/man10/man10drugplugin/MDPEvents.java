@@ -13,6 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.List;
+
+import static red.man10.man10drugplugin.DataBase.*;
 import static red.man10.man10drugplugin.DataBase.loadDataBase;
 import static red.man10.man10drugplugin.DataBase.playerHash;
 import static red.man10.man10drugplugin.DataBase.saveDataBase;
@@ -63,32 +66,43 @@ public class MDPEvents implements Listener {
     public static void useDrug(String key, ItemStack stack, Player player){
         String[] playerKey = {player.getName(),key};
         LoadConfigData.DrugData data = drugMap.get(key);
-        DataBase.PlayerDrugData playerData = playerHash.get(playerKey);
+        PlayerDrugData playerData = playerHash.get(playerKey);
         if (data==null||playerData==null){
             player.sendMessage(chatMessage+"§2今は薬を吸う気分ではないようだ");
             return;
         }
-        for (int i = 0;i!=data.level;i++){
-            Bukkit.getLogger().info("level check");
-            if (playerData.level == i){
-                for (int i1 = 0;i1!=data.buffs.size();i1+=3) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buffs.get(i)[i1]),
-                            Integer.parseInt(data.buffs.get(i)[i1 + 1]),
-                            Integer.parseInt(data.buffs.get(i)[i1 + 2])));
-                    Bukkit.getLogger().info("add potion");
-                }
-                for (int i1 = 0;i1!=data.deBuffs.size();i1+=3) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuffs.get(i)[i1]),
-                            Integer.parseInt(data.deBuffs.get(i)[i1 + 1]),
-                            Integer.parseInt(data.deBuffs.get(i)[i1 + 2])));
+        player.sendMessage(data.useMessage);
+        if (data.type == 0){
+            for (int i = 0;i!=data.level;i++){
+                Bukkit.getLogger().info("level check");
+                if (playerData.level == i){
+                    for (int i1 = 0;i1!=data.buffs.size();i1+=3) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buffs.get(i)[i1]),
+                                Integer.parseInt(data.buffs.get(i)[i1 + 1]),
+                                Integer.parseInt(data.buffs.get(i)[i1 + 2])));
+                        Bukkit.getLogger().info("add potion");
+                    }
+                    for (int i1 = 0;i1!=data.deBuffs.size();i1+=3) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuffs.get(i)[i1]),
+                                Integer.parseInt(data.deBuffs.get(i)[i1 + 1]),
+                                Integer.parseInt(data.deBuffs.get(i)[i1 + 2])));
+                    }
                 }
             }
-        }
-        playerData.count ++;
-        for (int i = 0;i!=data.level;i++){
-            if (playerData.count == data.power*i){
-                playerData.level ++;
-                break;
+            playerData.count ++;
+            for (int i = 0;i!=data.level;i++){
+                if (playerData.count == data.power*i){
+                    playerData.level ++;
+                    break;
+                }
+            }
+        }else if (data.type == 1){
+            playerData.count ++;
+            if (playerData.count==data.power){
+                String[] pKey =  {player.getName(),data.weakDrug};
+                PlayerDrugData hash = playerHash.get(pKey);
+                hash.count -= data.level;
+                DataBase.saveData(pKey,hash);
             }
         }
         player.getInventory().remove(stack);
