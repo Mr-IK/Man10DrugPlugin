@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.List;
 
 import static red.man10.man10drugplugin.DataBase.*;
 import static red.man10.man10drugplugin.DataBase.loadDataBase;
@@ -64,7 +63,7 @@ public class MDPEvents implements Listener {
     }
 
     public static void useDrug(String key, ItemStack stack, Player player){
-        String[] playerKey = {player.getName(),key};
+        String playerKey = player.getName()+key;
         LoadConfigData.DrugData data = drugMap.get(key);
         PlayerDrugData playerData = playerHash.get(playerKey);
         if (data==null||playerData==null){
@@ -74,7 +73,6 @@ public class MDPEvents implements Listener {
         player.sendMessage(data.useMessage);
         if (data.type == 0){
             for (int i = 0;i!=data.level;i++){
-                Bukkit.getLogger().info("level check");
                 if (playerData.level == i){
                     for (int i1 = 0;i1!=data.buffs.size();i1+=3) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buffs.get(i)[i1]),
@@ -99,13 +97,18 @@ public class MDPEvents implements Listener {
         }else if (data.type == 1){
             playerData.count ++;
             if (playerData.count==data.power){
-                String[] pKey =  {player.getName(),data.weakDrug};
+                String pKey =  player.getName()+data.weakDrug;
                 PlayerDrugData hash = playerHash.get(pKey);
                 hash.count -= data.level;
+                for (int i = 0;i!=hash.level;i++){
+                    if (hash.count <= drugMap.get(data.weakDrug).power*i){
+                        playerData.level --;
+                        break;
+                    }
+                }
                 DataBase.saveData(pKey,hash);
             }
         }
-        player.getInventory().remove(stack);
         saveData(key,data);
         DataBase.saveData(playerKey,playerData);
     }

@@ -12,13 +12,17 @@ import java.util.*;
 
 import static red.man10.man10drugplugin.LoadConfigData.*;
 
+/*
+    Create by forest611
+ */
+
 public final class Man10DrugPlugin extends JavaPlugin {
 
     static List<String> drugName = new ArrayList<String>();//薬の名前
     static HashMap<String,ItemStack> drugStack = new HashMap<String, ItemStack>();//key,drugMap.name
     static List<String> loreData = new ArrayList<String>();//lore
     FileConfiguration config;
-    MySQLManager mysql;
+    private MySQLManager mysql;
 
     @Override
     public void onEnable() {
@@ -44,11 +48,6 @@ public final class Man10DrugPlugin extends JavaPlugin {
             return;
         }
         List<File> drugData = new ArrayList<File>(Arrays.asList(drugFolder.listFiles()));
-        if (drugData == null){
-            Bukkit.getLogger().info("ドラックデータが見つかりません");
-            Bukkit.getLogger().info("読み込みを終了します");
-            return;
-        }
         try {
             for (int i = 0; i!=drugData.size();i++){
                 if (drugData.get(i).getName().equalsIgnoreCase("config.yml")||
@@ -67,6 +66,9 @@ public final class Man10DrugPlugin extends JavaPlugin {
                 drugStack.put(drugName.get(i),drugItem(drugName.get(i)));
 
 
+            }
+            if (drugData.size()!=drugName.size()){
+                Bukkit.getLogger().info("debugLog");
             }
         } catch (FileNotFoundException e) {
             Bukkit.getLogger().info("catch,br");
@@ -107,6 +109,4 @@ public final class Man10DrugPlugin extends JavaPlugin {
         drug.setItemMeta(meta);
         return drug;
     }
-
-
 }

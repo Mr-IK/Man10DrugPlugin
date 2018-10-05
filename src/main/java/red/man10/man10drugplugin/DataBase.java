@@ -11,30 +11,27 @@ import static red.man10.man10drugplugin.Man10DrugPlugin.drugName;
 
 public class DataBase {
 
-    static class PlayerDrugData{
-        int count;
-        int level;
-        int time;
-        DrugTimer drugTimer;
-    }
-    static HashMap<String[],PlayerDrugData> playerHash = new HashMap<String[], PlayerDrugData>();
+    static HashMap<String,PlayerDrugData> playerHash = new HashMap<String, PlayerDrugData>();
+
 //key...playerName,drugName
-    static PlayerDrugData loadData(String[] key){
+    static PlayerDrugData loadData(String key){
         PlayerDrugData data = playerHash.get(key);
         if (data == null){
             data = new PlayerDrugData();
         }
         return data;
     }
-    static PlayerDrugData saveData(String[] key,PlayerDrugData data){
+
+    static PlayerDrugData saveData(String key,PlayerDrugData data){
         return playerHash.put(key,data);
     }
+
     public static void loadDataBase(MySQLManager mysql, Player player){
         ResultSet rs;
         for (int i = 0;i!=drugName.size();i++){
-            String[] key = {player.getName(),drugName.get(i)};
+            String key = player.getName()+drugName.get(i);
             PlayerDrugData data = loadData(key);
-            String sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
+            String sql = "SELECT count,level,dependence FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
                     "' and drug_name='"+ drugName.get(i)+"';";
             rs = mysql.query(sql);
             try {
@@ -43,44 +40,45 @@ public class DataBase {
                             player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0);";
                     mysql.execute(sql);
                     Bukkit.getLogger().info(player.getName()+" insert DB");
-                    sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
+                    sql = "SELECT count,level,dependence FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
                             "' and drug_name='"+ drugName.get(i)+"';";
                     rs = mysql.query(sql);
                 }
-//                rs.beforeFirst();
-                rs.next();
                 data.count = rs.getInt("count");
                 data.level = rs.getInt("level");
-                data.time = rs.getInt("time");
+                data.isDependence = rs.getInt("dependence") != 0;
                 Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+","+i+",");
-                Bukkit.getLogger().info(key[0]+key[1]);
-                Bukkit.getLogger().info(data.count+","+data.time+","+data.level);
+                Bukkit.getLogger().info(key);
 
-//                while (rs.next()){
-//                    data.count = rs.getInt("count");
-//                    data.level = rs.getInt("level");
-//                    data.time = rs.getInt("time");
-//                    Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+i);
-//                    break;
-//                }
                 rs.close();
+//                data.drugTimer = new DrugTimer(mysql,player,drugName.get(i));
+//                data.drugTimer.startTask();
                 saveData(key,data);
             } catch (Exception e) {
                 Bukkit.getLogger().info(e.toString());
             }
         }
     }
+
     public static void saveDataBase(MySQLManager mysql ,Player player){
-        String[] key = new String[2];
-        key[0] = player.getName();
         for(int i = 0;i!=drugName.size();i++){
-            key[1] = drugName.get(i);
+            String key = player.getName()+drugName.get(i);
             PlayerDrugData data = loadData(key);
+            int dep;
+            if (data.isDependence)dep = 1;
+            else dep = 0;
             String sql = "UPDATE man10drugPlugin.drug SET count="+data.count+",level="+data.level+
-                    ",time="+data.time+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
+                    ",dependence="+dep+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
         }
         Bukkit.getLogger().info(player.getName()+ " save DB");
+    }
+
+    static class PlayerDrugData{
+        int count;
+        int level;
+        boolean isDependence;
+        DrugTimer drugTimer;
     }
 }

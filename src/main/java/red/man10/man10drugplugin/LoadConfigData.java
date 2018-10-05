@@ -1,8 +1,6 @@
 package red.man10.man10drugplugin;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 
 import java.util.ArrayList;
@@ -70,9 +68,9 @@ public class LoadConfigData {
         String useMessage;//使ったときのチャットメッセージ
         String symptomsMessage;//禁断症状が出たときのメッセージ
         short damage = 0;//アイテムのダメージ値
-        int level = 0;//何段階にするか
+        int level = 0;//何段階にするか、依存を治す場合 カウントを下げる強さ
         int time = 300;//何分立ったら禁断症状が出るか
-        int power = 0;//指定回数使用でレベルアップ
+        int power = 0;//指定回数使用でレベルアップ、依存を治す薬の場合、指定回数で依存している薬のレベルを下げる
         int type = 0; //0...薬物,1...依存を治す,2...治癒
         HashMap<Integer,String[]> buffs = new HashMap<Integer, String[]>();//ポーション名、時間、レベル
         HashMap<Integer,String[]> deBuffs = new HashMap<Integer, String[]>();
