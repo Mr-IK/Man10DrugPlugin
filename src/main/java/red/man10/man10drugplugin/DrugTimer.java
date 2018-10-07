@@ -12,6 +12,7 @@ import static red.man10.man10drugplugin.LoadConfigData.*;
 
 public class DrugTimer  extends Thread{
     MySQLManager mysql;
+    TimerTask task;
     Player player;
     String drug;
     boolean isDependence;
@@ -25,15 +26,15 @@ public class DrugTimer  extends Thread{
         String key = player.getName()+drug;
         PlayerDrugData data = playerHash.get(key);
         DrugData drugData = drugMap.get(drug);
-        TimerTask task = new TimerTask() {//禁断症状
+        task = new TimerTask() {//禁断症状
             @Override
             public void run() {
             Bukkit.getLogger().info("task run");
             player.sendMessage(drugData.symptomsMessage);
-            for (int i = 0;i!=drugData.symptomsBuffs.size();i+=3) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuffs.get(data.level-1)[i]),
-                        Integer.parseInt(drugData.symptomsBuffs.get(data.level-1)[i + 1]),
-                        Integer.parseInt(drugData.symptomsBuffs.get(data.level-1)[i + 2])));
+            for (int i = 0;i!=drugData.symptomsBuff.size();i+=3) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i]),
+                        Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1]),
+                        Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
                 Bukkit.getLogger().info("add potion");
             }
             isDependence = true;
@@ -51,6 +52,10 @@ public class DrugTimer  extends Thread{
             task.cancel();
             isDependence = false;
         }
+    }
+    public void stopTask(){
+        task.cancel();
+        Bukkit.getLogger().info("stop task");
     }
 
 }

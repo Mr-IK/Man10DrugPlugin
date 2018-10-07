@@ -35,9 +35,53 @@ public class MDPEvents implements Listener {
         loadDataBase(mysql,event.getPlayer());
     }
 
-    @EventHandler
-    public void playerQuitEvent(PlayerQuitEvent event){
-        saveDataBase(mysql,event.getPlayer());
+    public static void useDrug(String key, ItemStack stack, Player player){
+        String playerKey = player.getName()+key;
+        LoadConfigData.DrugData data = drugMap.get(key);
+        PlayerDrugData playerData = playerHash.get(playerKey);
+        if (data==null||playerData==null){
+            player.sendMessage(chatMessage+"§2今は薬を吸う気分ではないようだ");
+            return;
+        }
+        player.sendMessage(data.useMessage);
+        if (data.type == 0){
+            for (int i1 = 0;i1!=data.buff.size();i1+=3) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buff.get(playerData.level)[i1]),
+                        Integer.parseInt(data.buff.get(playerData.level)[i1 + 1]),
+                        Integer.parseInt(data.buff.get(playerData.level)[i1 + 2])));
+                Bukkit.getLogger().info("add potion");
+            }
+            for (int i1 = 0;i1!=data.deBuff.size();i1+=3) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuff.get(playerData.level)[i1]),
+                        Integer.parseInt(data.deBuff.get(playerData.level)[i1 + 1]),
+                        Integer.parseInt(data.deBuff.get(playerData.level)[i1 + 2])));
+            }
+            playerData.count ++;
+            for (int i = 0;i!=data.level;i++){
+                if (playerData.count == data.power*i){
+                    playerData.level ++;
+                    break;
+                }
+            }
+        }else if (data.type == 1){
+            playerData.count ++;
+            if (playerData.count==data.power){
+                String pKey =  player.getName()+data.weakDrug;
+                PlayerDrugData hash = playerHash.get(pKey);
+                hash.count -= data.level;
+                for (int i = 0;i!=hash.level;i++){
+                    if (hash.count <= drugMap.get(data.weakDrug).power*i){
+                        playerData.level --;
+                        break;
+                    }
+                }
+                DataBase.saveData(pKey,hash);
+            }
+        }
+        int am = stack.getAmount();
+        stack.setAmount(am--);
+        saveData(key,data);
+        DataBase.saveData(playerKey,playerData);
     }
 
     @EventHandler
@@ -62,55 +106,10 @@ public class MDPEvents implements Listener {
         }
     }
 
-    public static void useDrug(String key, ItemStack stack, Player player){
-        String playerKey = player.getName()+key;
-        LoadConfigData.DrugData data = drugMap.get(key);
-        PlayerDrugData playerData = playerHash.get(playerKey);
-        if (data==null||playerData==null){
-            player.sendMessage(chatMessage+"§2今は薬を吸う気分ではないようだ");
-            return;
-        }
-        player.sendMessage(data.useMessage);
-        if (data.type == 0){
-            for (int i = 0;i!=data.level;i++){
-                if (playerData.level == i){
-                    for (int i1 = 0;i1!=data.buffs.size();i1+=3) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buffs.get(i)[i1]),
-                                Integer.parseInt(data.buffs.get(i)[i1 + 1]),
-                                Integer.parseInt(data.buffs.get(i)[i1 + 2])));
-                        Bukkit.getLogger().info("add potion");
-                    }
-                    for (int i1 = 0;i1!=data.deBuffs.size();i1+=3) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuffs.get(i)[i1]),
-                                Integer.parseInt(data.deBuffs.get(i)[i1 + 1]),
-                                Integer.parseInt(data.deBuffs.get(i)[i1 + 2])));
-                    }
-                }
-            }
-            playerData.count ++;
-            for (int i = 0;i!=data.level;i++){
-                if (playerData.count == data.power*i){
-                    playerData.level ++;
-                    break;
-                }
-            }
-        }else if (data.type == 1){
-            playerData.count ++;
-            if (playerData.count==data.power){
-                String pKey =  player.getName()+data.weakDrug;
-                PlayerDrugData hash = playerHash.get(pKey);
-                hash.count -= data.level;
-                for (int i = 0;i!=hash.level;i++){
-                    if (hash.count <= drugMap.get(data.weakDrug).power*i){
-                        playerData.level --;
-                        break;
-                    }
-                }
-                DataBase.saveData(pKey,hash);
-            }
-        }
-        saveData(key,data);
-        DataBase.saveData(playerKey,playerData);
+    @EventHandler
+    public void playerQuitEvent(PlayerQuitEvent event){
+        saveDataBase(mysql,event.getPlayer());
+
     }
 
 }

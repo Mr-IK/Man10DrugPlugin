@@ -34,7 +34,7 @@ public class LoadConfigData {
                 String[] buffLevel = str[1].split("/",0);//levelごとにわける
                 for (int i = 0;i!=buffLevel.length;i++){
                     String[] buff = buffLevel[i].split(",",0);//バフ名ごとに分ける
-                    data.buffs.put(i,buff);//level分けようにナンバーをふる
+                    data.buff.add(buff);
                 }
                 break;
             }
@@ -42,7 +42,7 @@ public class LoadConfigData {
                 String[] buffLevel = str[1].split("/",0);
                 for (int i = 0;i!=buffLevel.length;i++){
                     String[] buff = buffLevel[i].split(",",0);
-                    data.deBuffs.put(i,buff);//level分けようにナンバーをふる
+                    data.deBuff.add(buff);
                 }
                 break;
             }
@@ -50,7 +50,7 @@ public class LoadConfigData {
                 String[] buffLevel = str[1].split("/",0);
                 for (int i = 0;i!=buffLevel.length;i++){
                     String[] buff = buffLevel[i].split(",",0);
-                    data.symptomsBuffs.put(i,buff);//level分けようにナンバーをふる
+                    data.symptomsBuff.add(buff);
                 }
                 break;
             }
@@ -72,9 +72,9 @@ public class LoadConfigData {
         int time = 300;//何分立ったら禁断症状が出るか
         int power = 0;//指定回数使用でレベルアップ、依存を治す薬の場合、指定回数で依存している薬のレベルを下げる
         int type = 0; //0...薬物,1...依存を治す,2...治癒
-        HashMap<Integer,String[]> buffs = new HashMap<Integer, String[]>();//ポーション名、時間、レベル
-        HashMap<Integer,String[]> deBuffs = new HashMap<Integer, String[]>();
-        HashMap<Integer,String[]> symptomsBuffs = new HashMap<Integer, String[]>();//禁断症状が出たときにつくバフ
+        List<String[]> buff = new ArrayList<String[]>();
+        List<String[]> deBuff = new ArrayList<String[]>();
+        List<String[]> symptomsBuff = new ArrayList<String[]>();
         List<String> lore = new ArrayList<String>();//説明部分
     }
 

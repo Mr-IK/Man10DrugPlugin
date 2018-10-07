@@ -51,8 +51,8 @@ public class DataBase {
                 Bukkit.getLogger().info(key);
 
                 rs.close();
-//                data.drugTimer = new DrugTimer(mysql,player,drugName.get(i));
-//                data.drugTimer.startTask();
+                data.drugTimer = new DrugTimer(mysql,player,drugName.get(i));
+                data.drugTimer.startTask();
                 saveData(key,data);
             } catch (Exception e) {
                 Bukkit.getLogger().info(e.toString());
@@ -71,6 +71,7 @@ public class DataBase {
                     ",dependence="+dep+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
+            data.drugTimer.stopTask();
         }
         Bukkit.getLogger().info(player.getName()+ " save DB");
     }
