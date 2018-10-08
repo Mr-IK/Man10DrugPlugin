@@ -40,6 +40,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
     }
 
     public static void drugDataLoad(){
+        drugName.clear();
         File drugFolder = new File(Bukkit.getServer()
                 .getPluginManager().getPlugin("Man10DrugPlugin").getDataFolder(),File.separator);
         if (!drugFolder.exists()){
@@ -48,6 +49,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
             return;
         }
         List<File> drugData = new ArrayList<File>(Arrays.asList(drugFolder.listFiles()));
+        Bukkit.getLogger().info("drugdata size"+drugData.size());
         try {
             for (int i = 0; i!=drugData.size();i++){
                 if (drugData.get(i).getName().equalsIgnoreCase("config.yml")||
@@ -56,10 +58,10 @@ public final class Man10DrugPlugin extends JavaPlugin {
                     i--;
                     continue;
                 }
+                drugName.add(drugData.get(i).getName().replace(".txt",""));
                 Bukkit.getLogger().info("loading..."+drugData.get(i).getName());
                 BufferedReader br = new BufferedReader(new FileReader(drugData.get(i)));
                 String str;
-                drugName.add(drugData.get(i).getName().replace(".txt",""));
                 while ((str = br.readLine()) !=null){
                     LoadConfig(drugName.get(i),str);
                 }

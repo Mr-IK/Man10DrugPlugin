@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 import static red.man10.man10drugplugin.Man10DrugPlugin.drugName;
@@ -43,16 +42,16 @@ public class DataBase {
                     sql = "SELECT count,level,dependence FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
                             "' and drug_name='"+ drugName.get(i)+"';";
                     rs = mysql.query(sql);
+                    rs.next();
                 }
                 data.count = rs.getInt("count");
                 data.level = rs.getInt("level");
                 data.isDependence = rs.getInt("dependence") != 0;
-                Bukkit.getLogger().info(player.getName()+" load DB" + drugName.get(i)+","+i+",");
-                Bukkit.getLogger().info(key);
+                Bukkit.getLogger().info(player.getName()+" load DB");
 
                 rs.close();
                 data.drugTimer = new DrugTimer(mysql,player,drugName.get(i));
-                data.drugTimer.startTask();
+//                data.drugTimer.startTask();
                 saveData(key,data);
             } catch (Exception e) {
                 Bukkit.getLogger().info(e.toString());
@@ -71,7 +70,7 @@ public class DataBase {
                     ",dependence="+dep+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
-            data.drugTimer.stopTask();
+//            data.drugTimer.stopTask();
         }
         Bukkit.getLogger().info(player.getName()+ " save DB");
     }
