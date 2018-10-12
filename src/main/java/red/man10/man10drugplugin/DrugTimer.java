@@ -31,7 +31,7 @@ public class DrugTimer  extends Thread{
             public void run() {
             Bukkit.getLogger().info("task run");
             player.sendMessage(drugData.symptomsMessage);
-            for (int i = 0;i!=drugData.symptomsBuff.size();i+=3) {
+            for (int i = 0;i!=drugData.symptomsBuff.size()-3;i+=3) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i]),
                         Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1]),
                         Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));

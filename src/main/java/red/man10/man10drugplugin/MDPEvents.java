@@ -45,16 +45,16 @@ public class MDPEvents implements Listener {
         }
         player.sendMessage(data.useMessage);
         if (data.type == 0){
-            for (int i1 = 0;i1!=data.buff.size();i1+=3) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buff.get(playerData.level)[i1]),
-                        Integer.parseInt(data.buff.get(playerData.level)[i1 + 1]),
-                        Integer.parseInt(data.buff.get(playerData.level)[i1 + 2])));
+            for (int i = 0;i!=data.buff.size()-3;i+=3) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buff.get(playerData.level)[i]),
+                        Integer.parseInt(data.buff.get(playerData.level)[i + 1]),
+                        Integer.parseInt(data.buff.get(playerData.level)[i + 2])));
                 Bukkit.getLogger().info("add potion");
             }
-            for (int i1 = 0;i1!=data.deBuff.size();i1+=3) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuff.get(playerData.level)[i1]),
-                        Integer.parseInt(data.deBuff.get(playerData.level)[i1 + 1]),
-                        Integer.parseInt(data.deBuff.get(playerData.level)[i1 + 2])));
+            for (int i = 0;i!=data.deBuff.size()-3;i+=3) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuff.get(playerData.level)[i]),
+                        Integer.parseInt(data.deBuff.get(playerData.level)[i + 1]),
+                        Integer.parseInt(data.deBuff.get(playerData.level)[i + 2])));
             }
             playerData.count ++;
             for (int i = 0;i!=data.level;i++){
@@ -78,8 +78,6 @@ public class MDPEvents implements Listener {
                 DataBase.saveData(pKey,hash);
             }
         }
-        int am = stack.getAmount();
-        stack.setAmount(am--);
         saveData(key,data);
         DataBase.saveData(playerKey,playerData);
     }
@@ -91,7 +89,6 @@ public class MDPEvents implements Listener {
             Player player = event.getPlayer();
             ItemStack item = player.getInventory().getItemInMainHand();
             if (item.getType() == Material.AIR)return;
-            Bukkit.getLogger().info("click event");
             if (item.getItemMeta().getLore() == null||
                     item.getItemMeta().getLore().isEmpty())return;
             for (int i = 0;i!=loreData.size();i++){

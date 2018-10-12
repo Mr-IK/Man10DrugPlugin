@@ -34,6 +34,8 @@ public class MySQLFunc {
             return this.con;
         } catch (SQLException var2) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not connect to MySQL server, error code: " + var2.getErrorCode());
+            Bukkit.getLogger().log(Level.SEVERE, var2.getMessage());
+            Bukkit.getLogger().log(Level.SEVERE, "jdbc:mysql://" + this.HOST + ":" + this.PORT +"/" + this.DB + "?useSSL=false"+ this.USER);
         } catch (ClassNotFoundException var3) {
             Bukkit.getLogger().log(Level.SEVERE, "JDBC driver was not found in this machine.");
         }

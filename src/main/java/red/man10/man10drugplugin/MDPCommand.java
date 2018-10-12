@@ -28,7 +28,7 @@ public class MDPCommand implements CommandExecutor {
             return true;
         }
         if (!sender.hasPermission(permission)){
-            sender.sendMessage(permissionErrorString);
+            sender.sendMessage(chatMessage+permissionErrorString);
         }
             Player player = (Player)sender;
         if (args.length == 0){
@@ -104,8 +104,6 @@ public class MDPCommand implements CommandExecutor {
                 player.sendMessage(chatMessage+"§e現在のレベル§a"+ data.level);
             }catch (NullPointerException e ){
                 player.sendMessage(chatMessage+"§4使用情報を取得できませんでした");
-                Bukkit.getLogger().info(e.toString());
-                Bukkit.getLogger().info(key);
             }
             return true;
         }
@@ -126,7 +124,7 @@ public class MDPCommand implements CommandExecutor {
 
     }
 
-    void helpChat(Player player){
+    private void helpChat(Player player){
         player.sendMessage("§e§lMan10DrugPlugin HELP");
         player.sendMessage("§e/mdp get [drugName] 薬を手に入れる drugNameは設定ファイルの名前を入力してください(拡張子を含まない)");
         player.sendMessage("§e/mdp load [player名] 薬の使用データを読み込みます player名を”all”にすると" +

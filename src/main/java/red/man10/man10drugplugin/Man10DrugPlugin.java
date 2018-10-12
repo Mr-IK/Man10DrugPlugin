@@ -49,7 +49,6 @@ public final class Man10DrugPlugin extends JavaPlugin {
             return;
         }
         List<File> drugData = new ArrayList<File>(Arrays.asList(drugFolder.listFiles()));
-        Bukkit.getLogger().info("drugdata size"+drugData.size());
         try {
             for (int i = 0; i!=drugData.size();i++){
                 if (drugData.get(i).getName().equalsIgnoreCase("config.yml")||
@@ -59,7 +58,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
                     continue;
                 }
                 drugName.add(drugData.get(i).getName().replace(".txt",""));
-                Bukkit.getLogger().info("loading..."+drugData.get(i).getName());
+                Bukkit.getLogger().info("loading..."+drugName.get(i));
                 BufferedReader br = new BufferedReader(new FileReader(drugData.get(i)));
                 String str;
                 while ((str = br.readLine()) !=null){
@@ -68,9 +67,6 @@ public final class Man10DrugPlugin extends JavaPlugin {
                 drugStack.put(drugName.get(i),drugItem(drugName.get(i)));
 
 
-            }
-            if (drugData.size()!=drugName.size()){
-                Bukkit.getLogger().info("debugLog");
             }
         } catch (FileNotFoundException e) {
             Bukkit.getLogger().info("catch,br");

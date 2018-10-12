@@ -92,6 +92,7 @@ public class MySQLManager {
         } catch (SQLException var6) {
             this.connected = false;
             this.plugin.getLogger().info("[" + this.conName + "] Could not connect to the database.");
+            this.plugin.getLogger().info(var6.getMessage());
         }
 
         this.MySQL.close(this.con);
