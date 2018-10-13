@@ -58,10 +58,10 @@ public class LoadConfigData {
         String material;//薬にするアイテム
         String weakDrug;//弱める薬、ファイル名
         String useMessage = "§4§lスーハー....(゜∀。)ﾜﾋｬﾋｬﾋｬﾋｬﾋｬﾋｬ";//使ったときのチャットメッセージ
-        String symptomsMessage;//禁断症状が出たときのメッセージ
+        String symptomsMessage = "§4§lｸｽﾘｨ.....ｸｽﾘｨ.....ﾋｬｧｧｧ";//禁断症状が出たときのメッセージ
         short damage = 0;//アイテムのダメージ値
         int level = 0;//何段階にするか、依存を治す場合 カウントを下げる強さ
-        int time = 300;//何分立ったら禁断症状が出るか
+        long time = 300000;//禁断の出る時間(tick)
         int power = 0;//指定回数使用でレベルアップ、依存を治す薬の場合、指定回数で依存している薬のレベルを下げる
         byte type = 0; //0...薬物,1...依存を治す,2...治癒
         byte symptoms = 0;//0...無効1...有効

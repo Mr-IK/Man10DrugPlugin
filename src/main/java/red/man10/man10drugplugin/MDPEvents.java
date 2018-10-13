@@ -31,7 +31,7 @@ public class MDPEvents implements Listener {
         this.mysql = mysql;
     }
 
-    public static void useDrug(String key, ItemStack stack, Player player){
+    public void useDrug(String key, ItemStack stack, Player player){
         String playerKey = player.getName()+key;
         LoadConfigData.DrugData data = drugMap.get(key);
         PlayerDrugData playerData = playerHash.get(playerKey);
@@ -60,7 +60,7 @@ public class MDPEvents implements Listener {
                 }
             }
             if (playerData.drugTimer!=null){//禁断症状開始
-                playerData.drugTimer.startTask();
+                playerData.drugTimer.runTaskTimer(plugin,data.time,data.time);
             }
             playerData.count ++;
             for (int i = 0;i!=data.level;i++){//レベルアップ処理

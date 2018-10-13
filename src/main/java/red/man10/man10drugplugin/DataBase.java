@@ -9,7 +9,7 @@ import java.util.HashMap;
 import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 import static red.man10.man10drugplugin.Man10DrugPlugin.drugName;
 
-public class DataBase {
+public class DataBase{
 
     static HashMap<String,PlayerDrugData> playerHash = new HashMap<String, PlayerDrugData>();
 
@@ -72,9 +72,6 @@ public class DataBase {
                     ",dependence="+dep+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
-            if (drugMap.get(drugName.get(i)).symptoms==1){
-                data.drugTimer.stopTask();
-            }
         }
         Bukkit.getLogger().info(player.getName()+ " save DB");
     }
