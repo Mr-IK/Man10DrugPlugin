@@ -27,15 +27,32 @@ public class MDPCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return true;
         }
+        String cmd = args[0];
+        Player player = (Player)sender;
+        if (cmd.equalsIgnoreCase("show")){
+            if (args.length != 2){
+                return true;
+            }
+            try {
+                player.sendMessage(chatMessage+"§e"+args[1]+"の使用情報");
+                for (int i = 0;i!=drugName.size();i++){
+                    player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+playerHash.get(args[1]+drugName.get(i))+
+                            ","+playerHash.get(args[1]+drugName.get(i)));
+
+                }
+            }catch (NullPointerException e ){
+                player.sendMessage(chatMessage+"§4使用情報を取得できませんでした");
+            }
+            return true;
+        }
+
         if (!sender.hasPermission(permission)){
             sender.sendMessage(chatMessage+permissionErrorString);
         }
-            Player player = (Player)sender;
         if (args.length == 0){
             helpChat(player);
             return true;
         }
-        String cmd = args[0];
         if (cmd.equalsIgnoreCase("get")){
             if (args.length == 2){//args[1]...drugName
                 if (drugStack.get(args[1])==null){
@@ -66,7 +83,6 @@ public class MDPCommand implements CommandExecutor {
         if (cmd.equalsIgnoreCase("load")){
             if (args.length == 2){
                 if (args[1].equalsIgnoreCase("all")){
-                    Bukkit.broadcastMessage(chatMessage+"§4§lMan10DrugPluginをリロードします");
                     for (Player p : Bukkit.getServer().getOnlinePlayers()){
                         DataBase.loadDataBase(mysql,p);
                     }
@@ -92,33 +108,11 @@ public class MDPCommand implements CommandExecutor {
             }
             return true;
         }
-        if (cmd.equalsIgnoreCase("show")){
-            if (args.length != 3){
-                return true;
-            }
-            String key = args[1]+args[2];
-            try {
-                DataBase.PlayerDrugData data = playerHash.get(key);
-                player.sendMessage(chatMessage+"§a"+args[1]+"の§a"+args[2]+"の使用情報");
-                player.sendMessage(chatMessage+"§e使用回数§a"+ data.count);
-                player.sendMessage(chatMessage+"§e現在のレベル§a"+ data.level);
-            }catch (NullPointerException e ){
-                player.sendMessage(chatMessage+"§4使用情報を取得できませんでした");
-            }
-            return true;
-        }
         if (cmd.equalsIgnoreCase("drugName")){
             player.sendMessage(chatMessage+"§e読み込まれているドラッグ一覧");
             for (int i = 0;i!=drugName.size();i++){
                 player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+drugMap.get(drugName.get(i)).name);
             }
-        }
-        if (cmd.equalsIgnoreCase("insert")){
-            String sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
-                    Bukkit.getPlayer(args[1]).getUniqueId()
-                    +"','"+Bukkit.getPlayer(args[1]).getName()+"','"+args[2]+"',0,0,0);";
-            mysql.execute(sql);
-
         }
         return true;
 
@@ -132,9 +126,8 @@ public class MDPCommand implements CommandExecutor {
         player.sendMessage("§e/mdp save [player名] 薬のデータを保存します player名を”all’にすると" +
                 "現在オンラインのすべてのプレイヤーのデータを保存します");
         player.sendMessage("§e/mdp reload 薬の設定ファイルを再読込みします");
-        player.sendMessage("§e/mdp show [player名] [drugName] 薬の使用情報を見ることができます");
+        player.sendMessage("§e/mdp show [player名] 薬の使用情報を見ることができます");
         player.sendMessage("§e/mdp drugName 読み込まれている薬の名前を表示します");
-        player.sendMessage("§e/mdp insert [player名] [drugName] 指定したプレイヤーの薬データを作成します(作成されていないとき)");
     }
 
 }

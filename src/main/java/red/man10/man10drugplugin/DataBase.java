@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import java.sql.ResultSet;
 import java.util.HashMap;
 
+import static red.man10.man10drugplugin.LoadConfigData.drugMap;
 import static red.man10.man10drugplugin.Man10DrugPlugin.drugName;
 
 public class DataBase {
@@ -50,8 +51,11 @@ public class DataBase {
                 Bukkit.getLogger().info(player.getName()+" load DB");
 
                 rs.close();
-                data.drugTimer = new DrugTimer(mysql,player,drugName.get(i));
-//                data.drugTimer.startTask();
+                if (!(drugMap.get(drugName).symptomsBuff==null)){
+                    data.drugTimer = new DrugTimer(mysql,player,drugName.get(i));
+                    data.drugTimer.startTask();
+
+                }
                 saveData(key,data);
             } catch (Exception e) {
                 Bukkit.getLogger().info(e.toString());
@@ -70,7 +74,9 @@ public class DataBase {
                     ",dependence="+dep+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
-//            data.drugTimer.stopTask();
+            if (!(drugMap.get(drugName).symptomsBuff==null)){
+                data.drugTimer.stopTask();
+            }
         }
         Bukkit.getLogger().info(player.getName()+ " save DB");
     }
