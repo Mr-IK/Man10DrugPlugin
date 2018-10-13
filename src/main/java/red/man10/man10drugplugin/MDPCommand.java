@@ -102,7 +102,10 @@ public class MDPCommand implements CommandExecutor {
                 DataBase.saveDataBase(mysql,p);
             }
             player.sendMessage(chatMessage+"§aコンフィグ再読み込み");
-
+            drugName.clear();
+            drugStack.clear();
+            drugMap.clear();
+            playerHash.clear();
             Man10DrugPlugin.drugDataLoad();
             player.sendMessage(chatMessage+"§aプレイヤーデータ読み込み");
             for (Player p : Bukkit.getServer().getOnlinePlayers()){

@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.util.*;
 
+import static red.man10.man10drugplugin.DataBase.playerHash;
 import static red.man10.man10drugplugin.LoadConfigData.*;
 
 /*
@@ -25,32 +26,11 @@ public final class Man10DrugPlugin extends JavaPlugin {
     FileConfiguration config;
     private MySQLManager mysql;
 
-    @Override
-    public void onEnable() {
-        saveDefaultConfig();
-        config = getConfig();
-        mysql = new MySQLManager(this,"man10drugPlugin");
-        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを読み込みました");
-        getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
-        Bukkit.getServer().getPluginManager().registerEvents(new MDPEvents(this,mysql), this);
-        drugDataLoad();//load config
-        for (Player p : Bukkit.getServer().getOnlinePlayers()){
-            DataBase.loadDataBase(mysql,p);
-        }
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        for (Player p : Bukkit.getServer().getOnlinePlayers()){
-            DataBase.saveDataBase(mysql,p);
-        }
-        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを保存しました");
-
-    }
-
     public static void drugDataLoad(){
         drugName.clear();
+        drugStack.clear();
+        drugMap.clear();
+        playerHash.clear();
         File drugFolder = new File(Bukkit.getServer()
                 .getPluginManager().getPlugin("Man10DrugPlugin").getDataFolder(),File.separator);
         if (!drugFolder.exists()){
@@ -83,6 +63,30 @@ public final class Man10DrugPlugin extends JavaPlugin {
         } catch (IOException e) {
             Bukkit.getLogger().info("catch,br line");
         }
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        for (Player p : Bukkit.getServer().getOnlinePlayers()){
+            DataBase.saveDataBase(mysql,p);
+        }
+        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを保存しました");
+
+    }
+
+    @Override
+    public void onEnable() {
+        saveDefaultConfig();
+        config = getConfig();
+        mysql = new MySQLManager(this,"man10drugPlugin");
+        getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
+        Bukkit.getServer().getPluginManager().registerEvents(new MDPEvents(this,mysql), this);
+        drugDataLoad();//load config
+        for (Player p : Bukkit.getServer().getOnlinePlayers()){
+            DataBase.loadDataBase(mysql,p);
+        }
+        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを読み込みました");
     }
 
     private static ItemStack drugItem(String drugName){
