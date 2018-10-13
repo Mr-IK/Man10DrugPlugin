@@ -3,6 +3,7 @@ package red.man10.man10drugplugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,14 +30,23 @@ public final class Man10DrugPlugin extends JavaPlugin {
         saveDefaultConfig();
         config = getConfig();
         mysql = new MySQLManager(this,"man10drugPlugin");
+        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを読み込みました");
         getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
         Bukkit.getServer().getPluginManager().registerEvents(new MDPEvents(this,mysql), this);
         drugDataLoad();//load config
+        for (Player p : Bukkit.getServer().getOnlinePlayers()){
+            DataBase.loadDataBase(mysql,p);
+        }
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        for (Player p : Bukkit.getServer().getOnlinePlayers()){
+            DataBase.saveDataBase(mysql,p);
+        }
+        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを保存しました");
+
     }
 
     public static void drugDataLoad(){

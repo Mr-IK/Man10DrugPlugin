@@ -48,18 +48,20 @@ public class MDPEvents implements Listener {
                 player.sendMessage("§4§lスーハー.....§2あれ？");
             }else {
                 player.sendMessage(data.useMessage);
-                for (int i = 0;i!=data.buff.size();i++) {
+                for (int i = 0;i!=data.buff.get(playerData.level).length;i++) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buff.get(playerData.level)[i]),
-                            Integer.parseInt(data.buff.get(playerData.level)[i += 1]),
-                            Integer.parseInt(data.buff.get(playerData.level)[i += 2])));
+                            Integer.parseInt(data.buff.get(playerData.level)[i + 1]),
+                            Integer.parseInt(data.buff.get(playerData.level)[i + 2])));
+                    i+=2;
                     Bukkit.getLogger().info("add potion");
                 }
             }
             if (data.deBuff.size()!=0){
-                for (int i = 0;i!=data.deBuff.size();i++) {
+                for (int i = 0;i!=data.deBuff.get(playerData.level).length;i++) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuff.get(playerData.level)[i]),
-                            Integer.parseInt(data.deBuff.get(playerData.level)[i += 1]),
-                            Integer.parseInt(data.deBuff.get(playerData.level)[i += 2])));
+                            Integer.parseInt(data.deBuff.get(playerData.level)[i + 1]),
+                            Integer.parseInt(data.deBuff.get(playerData.level)[i + 2])));
+                    i+=2;
                 }
             }
             playerData.count ++;
@@ -99,10 +101,8 @@ public class MDPEvents implements Listener {
                     item.getItemMeta().getLore().isEmpty())return;
             for (int i = 0;i!=loreData.size();i++){
                 if (item.getItemMeta().getLore().get(0).startsWith(loreData.get(i))){
-                    Bukkit.getLogger().info("use event,"+loreData.get(i));
                     String key = loreData.get(i).replaceAll("§","");
                     useDrug(key, item, player);
-                    Bukkit.getLogger().info(player.getName()+" used "+key );
                     return;
                 }
             }
