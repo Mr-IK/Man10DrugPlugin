@@ -28,7 +28,8 @@ public class LoadConfigData {
             case "DAMAGE":data.damage = Short.parseShort(str[1]);break;//def 0
             case "LEVEL":data.level = Integer.parseInt(str[1]);break;//def 0
             case "POWER":data.power = Integer.parseInt(str[1]);break;//def 0
-            case "TYPE" :data.type = Integer.parseInt(str[1]);break;//def 0
+            case "TYPE" :data.type = Byte.parseByte(str[1]);break;//def 0
+            case "SYMPTOMS":data.symptoms = Byte.parseByte(str[1]);//def 0
             case "TIME" :data.time = Integer.parseInt(str[1]);break;//def 300(5分)
             case "BUFF":{
                 String[] buff = str[1].split(",",0);
@@ -56,13 +57,14 @@ public class LoadConfigData {
         String name;//表示名
         String material;//薬にするアイテム
         String weakDrug;//弱める薬、ファイル名
-        String useMessage;//使ったときのチャットメッセージ
+        String useMessage = "§4§lスーハー....(゜∀。)ﾜﾋｬﾋｬﾋｬﾋｬﾋｬﾋｬ";//使ったときのチャットメッセージ
         String symptomsMessage;//禁断症状が出たときのメッセージ
         short damage = 0;//アイテムのダメージ値
         int level = 0;//何段階にするか、依存を治す場合 カウントを下げる強さ
         int time = 300;//何分立ったら禁断症状が出るか
         int power = 0;//指定回数使用でレベルアップ、依存を治す薬の場合、指定回数で依存している薬のレベルを下げる
-        int type = 0; //0...薬物,1...依存を治す,2...治癒
+        byte type = 0; //0...薬物,1...依存を治す,2...治癒
+        byte symptoms = 0;//0...無効1...有効
         List<String[]> buff = new ArrayList<String[]>();//index-1 = level
         List<String[]> deBuff = new ArrayList<String[]>();
         List<String[]> symptomsBuff = new ArrayList<String[]>();

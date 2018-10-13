@@ -27,17 +27,25 @@ public class MDPCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return true;
         }
-        String cmd = args[0];
+        if (!sender.hasPermission(permission)){
+            sender.sendMessage(chatMessage+permissionErrorString);
+        }
         Player player = (Player)sender;
+        if (args.length == 0){
+            helpChat(player);
+            return true;
+        }
+        String cmd = args[0];
+
         if (cmd.equalsIgnoreCase("show")){
             if (args.length != 2){
                 return true;
             }
             try {
-                player.sendMessage(chatMessage+"§e"+args[1]+"の使用情報");
+                player.sendMessage(chatMessage+"§e"+args[1]+"の使用情報(カウント、レベル)");
                 for (int i = 0;i!=drugName.size();i++){
-                    player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+playerHash.get(args[1]+drugName.get(i))+
-                            ","+playerHash.get(args[1]+drugName.get(i)));
+                    player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+playerHash.get(args[1]+drugName.get(i)).count+
+                            ","+playerHash.get(args[1]+drugName.get(i)).level);
 
                 }
             }catch (NullPointerException e ){
@@ -46,13 +54,7 @@ public class MDPCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sender.hasPermission(permission)){
-            sender.sendMessage(chatMessage+permissionErrorString);
-        }
-        if (args.length == 0){
-            helpChat(player);
-            return true;
-        }
+
         if (cmd.equalsIgnoreCase("get")){
             if (args.length == 2){//args[1]...drugName
                 if (drugStack.get(args[1])==null){

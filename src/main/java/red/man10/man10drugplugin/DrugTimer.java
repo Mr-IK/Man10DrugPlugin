@@ -15,15 +15,16 @@ public class DrugTimer  extends Thread{
     TimerTask task;
     Player player;
     String drug;
+    String key;
     boolean isDependence;
-    public DrugTimer(MySQLManager mysql,Player player,String drug){
+    public DrugTimer(MySQLManager mysql,Player player,String drug,String key){
         this.mysql = mysql;
         this.player = player;
         this.drug = drug;
+        this.key = key;
     }
 
     public void startTask(){
-        String key = player.getName()+drug;
         PlayerDrugData data = playerHash.get(key);
         DrugData drugData = drugMap.get(drug);
         task = new TimerTask() {//禁断症状

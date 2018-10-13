@@ -43,18 +43,24 @@ public class MDPEvents implements Listener {
             player.sendMessage(chatMessage+"§2今は薬を吸う気分ではないようだ");
             return;
         }
-        player.sendMessage(data.useMessage);
         if (data.type == 0){
-            for (int i = 0;i!=data.buff.size()-3;i+=3) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buff.get(playerData.level)[i]),
-                        Integer.parseInt(data.buff.get(playerData.level)[i + 1]),
-                        Integer.parseInt(data.buff.get(playerData.level)[i + 2])));
-                Bukkit.getLogger().info("add potion");
+            if (data.buff.size()==0){
+                player.sendMessage("§4§lスーハー.....§2あれ？");
+            }else {
+                player.sendMessage(data.useMessage);
+                for (int i = 0;i!=data.buff.size();i++) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buff.get(playerData.level)[i]),
+                            Integer.parseInt(data.buff.get(playerData.level)[i += 1]),
+                            Integer.parseInt(data.buff.get(playerData.level)[i += 2])));
+                    Bukkit.getLogger().info("add potion");
+                }
             }
-            for (int i = 0;i!=data.deBuff.size()-3;i+=3) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuff.get(playerData.level)[i]),
-                        Integer.parseInt(data.deBuff.get(playerData.level)[i + 1]),
-                        Integer.parseInt(data.deBuff.get(playerData.level)[i + 2])));
+            if (data.deBuff.size()!=0){
+                for (int i = 0;i!=data.deBuff.size();i++) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuff.get(playerData.level)[i]),
+                            Integer.parseInt(data.deBuff.get(playerData.level)[i += 1]),
+                            Integer.parseInt(data.deBuff.get(playerData.level)[i += 2])));
+                }
             }
             playerData.count ++;
             for (int i = 0;i!=data.level;i++){

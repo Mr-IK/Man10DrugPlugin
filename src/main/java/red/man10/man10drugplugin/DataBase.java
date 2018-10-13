@@ -51,8 +51,8 @@ public class DataBase {
                 Bukkit.getLogger().info(player.getName()+" load DB");
 
                 rs.close();
-                if (!(drugMap.get(drugName).symptomsBuff==null)){
-                    data.drugTimer = new DrugTimer(mysql,player,drugName.get(i));
+                if (drugMap.get(drugName.get(i)).symptoms==1){
+                    data.drugTimer = new DrugTimer(mysql,player,drugName.get(i),key);
                     data.drugTimer.startTask();
 
                 }
@@ -74,7 +74,7 @@ public class DataBase {
                     ",dependence="+dep+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
-            if (!(drugMap.get(drugName).symptomsBuff==null)){
+            if (drugMap.get(drugName.get(i)).symptoms==1){
                 data.drugTimer.stopTask();
             }
         }
