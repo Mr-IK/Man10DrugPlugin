@@ -13,6 +13,7 @@ import static red.man10.man10drugplugin.LoadConfigData.*;
 public class DrugTimer  extends Thread{
     MySQLManager mysql;
     TimerTask task;
+    Timer time;
     Player player;
     String drug;
     String key;
@@ -37,23 +38,12 @@ public class DrugTimer  extends Thread{
                         Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1]),
                         Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
                 i+=2;
-                Bukkit.getLogger().info("add potion");
             }
             isDependence = true;
             }
         };
-        if (data.count>=1){
-            Timer time = new Timer();
-            if (isDependence){
-                time.schedule(task,0,drugData.time*60000);
-            }else {
-                time.schedule(task,drugData.time*60000,drugData.time*60000);
-            }
-        }
-        if (data.count == 0){
-            task.cancel();
-            isDependence = false;
-        }
+        time = new Timer();
+        time.schedule(task,drugData.time*60000,drugData.time*60000);
     }
     public void stopTask(){
         task.cancel();

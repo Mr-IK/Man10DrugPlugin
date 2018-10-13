@@ -30,10 +30,6 @@ public class MDPEvents implements Listener {
         this.plugin = plugin;
         this.mysql = mysql;
     }
-    @EventHandler
-    public void playerJoinEvent(PlayerJoinEvent event){
-        loadDataBase(mysql,event.getPlayer());
-    }
 
     public static void useDrug(String key, ItemStack stack, Player player){
         String playerKey = player.getName()+key;
@@ -53,7 +49,6 @@ public class MDPEvents implements Listener {
                             Integer.parseInt(data.buff.get(playerData.level)[i + 1]),
                             Integer.parseInt(data.buff.get(playerData.level)[i + 2])));
                     i+=2;
-                    Bukkit.getLogger().info("add potion");
                 }
             }
             if (data.deBuff.size()!=0){
@@ -64,8 +59,11 @@ public class MDPEvents implements Listener {
                     i+=2;
                 }
             }
+            if (playerData.drugTimer!=null){//禁断症状開始
+                playerData.drugTimer.startTask();
+            }
             playerData.count ++;
-            for (int i = 0;i!=data.level;i++){
+            for (int i = 0;i!=data.level;i++){//レベルアップ処理
                 if (playerData.count == data.power*i){
                     playerData.level ++;
                     break;
@@ -73,19 +71,21 @@ public class MDPEvents implements Listener {
             }
         }else if (data.type == 1){
             playerData.count ++;
-            if (playerData.count==data.power){
+            if (playerData.count==data.power){//指定回数
                 String pKey =  player.getName()+data.weakDrug;
-                PlayerDrugData hash = playerHash.get(pKey);
-                hash.count -= data.level;
+                PlayerDrugData hash = playerHash.get(pKey);//依存を弱める対象
+                hash.count -= data.level;//指定の値だけカウントを下げる
                 for (int i = 0;i!=hash.level;i++){
-                    if (hash.count <= drugMap.get(data.weakDrug).power*i){
-                        playerData.level --;
+                    if (hash.count <= drugMap.get(data.weakDrug).power*i){//カウントがパワー*i未満になったらレベルを下げる
+                        hash.level --;
                         break;
                     }
                 }
                 DataBase.saveData(pKey,hash);
             }
         }
+        stack.setAmount(stack.getAmount()-1);
+        player.getInventory().setItemInMainHand(stack);
         saveData(key,data);
         DataBase.saveData(playerKey,playerData);
     }
@@ -102,6 +102,7 @@ public class MDPEvents implements Listener {
             for (int i = 0;i!=loreData.size();i++){
                 if (item.getItemMeta().getLore().get(0).startsWith(loreData.get(i))){
                     String key = loreData.get(i).replaceAll("§","");
+                    event.setCancelled(true);
                     useDrug(key, item, player);
                     return;
                 }
@@ -114,5 +115,11 @@ public class MDPEvents implements Listener {
         saveDataBase(mysql,event.getPlayer());
 
     }
+    @EventHandler
+    public void playerJoinEvent(PlayerJoinEvent event){
+        loadDataBase(mysql,event.getPlayer());
+
+    }
+
 
 }

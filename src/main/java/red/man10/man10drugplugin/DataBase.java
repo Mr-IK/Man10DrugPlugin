@@ -48,19 +48,17 @@ public class DataBase {
                 data.count = rs.getInt("count");
                 data.level = rs.getInt("level");
                 data.isDependence = rs.getInt("dependence") != 0;
-                Bukkit.getLogger().info(player.getName()+" load DB");
 
                 rs.close();
                 if (drugMap.get(drugName.get(i)).symptoms==1){
                     data.drugTimer = new DrugTimer(mysql,player,drugName.get(i),key);
-                    data.drugTimer.startTask();
-
                 }
                 saveData(key,data);
             } catch (Exception e) {
                 Bukkit.getLogger().info(e.toString());
             }
         }
+        Bukkit.getLogger().info(player.getName()+" load DB");
     }
 
     public static void saveDataBase(MySQLManager mysql ,Player player){
