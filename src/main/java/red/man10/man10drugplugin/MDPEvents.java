@@ -56,14 +56,6 @@ public class MDPEvents implements Listener {
                     i+=2;
                 }
             }
-            if (data.deBuff.size()!=0){
-                for (int i = 0;i!=data.deBuff.get(playerData.level).length;i++) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.deBuff.get(playerData.level)[i]),
-                            Integer.parseInt(data.deBuff.get(playerData.level)[i + 1]),
-                            Integer.parseInt(data.deBuff.get(playerData.level)[i + 2])));
-                    i+=2;
-                }
-            }
             if (playerData.drugTimer!=null){//禁断症状開始
                 if (playerData.isDependence){
                     playerData.isDependence = false;
@@ -111,7 +103,7 @@ public class MDPEvents implements Listener {
             DataBase.saveData(pKey,hash);
 
 
-            ////////////////////
+        ////////////////////
         //治癒（強)
         /////////////////////
         }else if (data.type == 2){
@@ -139,8 +131,8 @@ public class MDPEvents implements Listener {
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
             ItemStack item = player.getInventory().getItemInMainHand();
-            if (item.getType() == Material.AIR)return;
-            if (item.getItemMeta().getLore() == null||
+            if (item.getType() == Material.AIR||
+                    item.getItemMeta().getLore() == null||
                     item.getItemMeta().getLore().isEmpty())return;
             for (int i = 0;i!=loreData.size();i++){
                 if (item.getItemMeta().getLore().get(item.getItemMeta().getLore().size()-1)
@@ -148,7 +140,6 @@ public class MDPEvents implements Listener {
                     String key = loreData.get(i).replaceAll("§","");
                     event.setCancelled(true);
                     useDrug(key, item, player);
-                    return;
                 }
             }
         }

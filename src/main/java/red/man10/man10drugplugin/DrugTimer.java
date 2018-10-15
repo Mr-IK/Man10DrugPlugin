@@ -33,7 +33,9 @@ public class DrugTimer  extends BukkitRunnable {
         }
         player.sendMessage(drugData.symptomsMessage);
         for (int i = 0; i != drugData.symptomsBuff.get(data.level).length; i++) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i]), Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1]), Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i])
+                    , Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1])
+                    , Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
             i += 2;
 
         }

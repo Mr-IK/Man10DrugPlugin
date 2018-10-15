@@ -37,17 +37,13 @@ public class LoadConfigData {
                 data.buff.add(buff);
                 break;
             }
-            case "DEBUFF":{
-                String[] buff = str[1].split(",",0);
-                data.deBuff.add(buff);
-                break;
-            }
             case "SYMPBUFF":{
                 String[] buff = str[1].split(",",0);
                 data.symptomsBuff.add(buff);
                 break;
             }
             case "LORE":data.lore.add(str[1]);break;
+            default:Bukkit.getLogger().info("存在しない項目を入力しているか、記入ミスをしています");
         }
         saveData(drugName,data);
 
@@ -68,7 +64,6 @@ public class LoadConfigData {
         byte type = 0; //0...薬物,1...依存を治す,2...治癒
         byte symptoms = 0;//0...無効1...有効
         List<String[]> buff = new ArrayList<String[]>();//index-1 = level
-        List<String[]> deBuff = new ArrayList<String[]>();
         List<String[]> symptomsBuff = new ArrayList<String[]>();
         List<String> lore = new ArrayList<String>();//説明部分
     }

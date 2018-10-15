@@ -75,20 +75,6 @@ public final class Man10DrugPlugin extends JavaPlugin {
 
     }
 
-    @Override
-    public void onEnable() {
-        saveDefaultConfig();
-        config = getConfig();
-        mysql = new MySQLManager(this,"man10drugPlugin");
-        getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
-        Bukkit.getServer().getPluginManager().registerEvents(new MDPEvents(this,mysql), this);
-        drugDataLoad();//load config
-        for (Player p : Bukkit.getServer().getOnlinePlayers()){
-            DataBase.loadDataBase(mysql,p);
-        }
-        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを読み込みました");
-    }
-
     private static ItemStack drugItem(String drugName){
         DrugData data = loadData(drugName);
         if (data.name == null){
@@ -102,16 +88,18 @@ public final class Man10DrugPlugin extends JavaPlugin {
         ItemStack drug = new ItemStack(Material.valueOf(data.material),1);
         ItemMeta meta = drug.getItemMeta();
         meta.setDisplayName(data.name);
+
+
         StringBuffer l = new StringBuffer();
         char[] nameData = drugName.toCharArray();
         for (int i = 0;i!=nameData.length;i++){//loreで認識するために
             l.append("§").append(nameData[i]);
         }
         loreData.add(String.valueOf(l));
-        if (!data.lore.isEmpty()){
+        if (data.lore.isEmpty()){
+            data.lore.add("§e賢いman10民は薬を吸ってはいけません！");
             data.lore.add(String.valueOf(l));
         }else {
-            data.lore.add("§e賢いman10民は薬を吸ってはいけません！");
             data.lore.add(String.valueOf(l));
         }
         meta.setLore(data.lore);
@@ -120,5 +108,19 @@ public final class Man10DrugPlugin extends JavaPlugin {
         }
         drug.setItemMeta(meta);
         return drug;
+    }
+
+    @Override
+    public void onEnable() {
+        saveDefaultConfig();
+        config = getConfig();
+        mysql = new MySQLManager(this,"man10drugPlugin");
+        getCommand("mdp").setExecutor(new MDPCommand(this,mysql));
+        Bukkit.getServer().getPluginManager().registerEvents(new MDPEvents(this,mysql), this);
+        drugDataLoad();//load config
+        for (Player p : Bukkit.getServer().getOnlinePlayers()){//reload時にプレイヤーがいた場合
+            DataBase.loadDataBase(mysql,p);
+        }
+        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを読み込みました");
     }
 }

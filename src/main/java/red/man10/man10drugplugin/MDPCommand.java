@@ -27,6 +27,7 @@ public class MDPCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return true;
         }
+        //パーミッション
         if (!sender.hasPermission(permission)){
             sender.sendMessage(chatMessage+permissionErrorString);
         }
@@ -56,45 +57,46 @@ public class MDPCommand implements CommandExecutor {
 
 
         if (cmd.equalsIgnoreCase("get")){
-            if (args.length == 2){//args[1]...drugName
-                if (drugStack.get(args[1])==null){
-                    player.sendMessage(chatMessage+"§4"+args[1]+"§aという名前の薬は見つかりませんでした。");
-                    player.sendMessage(chatMessage+"§a設定ファイルの名前を入力してください(拡張子を含まない)");
-                    return false;
-                }
-                player.getInventory().addItem(drugStack.get(args[1]));
-                return true;
+            if(args.length!=2){
+                player.sendMessage(chatMessage+"§e/mdp get [drugName]");
+                return false;
             }
-            player.sendMessage(chatMessage+"§e/mdp get [drugName]");
-            return false;
-        }
+            //args[1]...drugName
+            if (drugStack.get(args[1])==null){
+                player.sendMessage(chatMessage+"§4"+args[1]+"§aという名前の薬は見つかりませんでした。");
+                player.sendMessage(chatMessage+"§a設定ファイルの名前を入力してください(拡張子を含まない)");
+                return false;
+            }
+            player.getInventory().addItem(drugStack.get(args[1]));
+            return true;
+            }
+
         if (cmd.equalsIgnoreCase("save")){
-            if (args.length == 2){
-                if (args[1].equalsIgnoreCase("all")){
-                    for (Player p : Bukkit.getServer().getOnlinePlayers()){
-                        DataBase.saveDataBase(mysql,p);
-                    }
-                    player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを保存しました");
-                    return true;
+            if (args.length != 2){
+                for (Player p : Bukkit.getServer().getOnlinePlayers()){
+                    DataBase.saveDataBase(mysql,p);
                 }
-                DataBase.saveDataBase(mysql,Bukkit.getPlayer(args[1]));
-                player.sendMessage(chatMessage+"§a"+args[1]+"§bのドラッグデータを保存しました");
+                player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを保存しました");
                 return true;
             }
+
+            DataBase.saveDataBase(mysql,Bukkit.getPlayer(args[1]));
+            player.sendMessage(chatMessage+"§a"+args[1]+"§bのドラッグデータを保存しました");
+            return true;
+
         }
         if (cmd.equalsIgnoreCase("load")){
-            if (args.length == 2){
-                if (args[1].equalsIgnoreCase("all")){
-                    for (Player p : Bukkit.getServer().getOnlinePlayers()){
-                        DataBase.loadDataBase(mysql,p);
-                    }
-                    player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを読み込みました");
-                    return true;
+            if (args.length != 2){
+                for (Player p : Bukkit.getServer().getOnlinePlayers()){
+                    DataBase.loadDataBase(mysql,p);
                 }
-                DataBase.loadDataBase(mysql,Bukkit.getPlayer(args[1]));
-                player.sendMessage(chatMessage+"§a"+args[1]+"§bのドラッグデータを読み込みました");
+                player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを読み込みました");
                 return true;
             }
+            DataBase.loadDataBase(mysql,Bukkit.getPlayer(args[1]));
+            player.sendMessage(chatMessage+"§a"+args[1]+"§bのドラッグデータを読み込みました");
+            return true;
+
         }
         if (cmd.equalsIgnoreCase("reload")){
             player.sendMessage(chatMessage+"§aプレイヤーデータの保存中");
@@ -126,9 +128,9 @@ public class MDPCommand implements CommandExecutor {
     private void helpChat(Player player){
         player.sendMessage("§e§lMan10DrugPlugin HELP");
         player.sendMessage("§e/mdp get [drugName] 薬を手に入れる drugNameは設定ファイルの名前を入力してください(拡張子を含まない)");
-        player.sendMessage("§e/mdp load [player名] 薬の使用データを読み込みます player名を”all”にすると" +
+        player.sendMessage("§e/mdp load [player名] 薬の使用データを読み込みます player名未入力で" +
                 "現在オンラインのすべてプレイヤーのデータを読み込みます");
-        player.sendMessage("§e/mdp save [player名] 薬のデータを保存します player名を”all’にすると" +
+        player.sendMessage("§e/mdp save [player名] 薬のデータを保存します player名未入力で" +
                 "現在オンラインのすべてのプレイヤーのデータを保存します");
         player.sendMessage("§e/mdp reload 薬の設定ファイルを再読込みします");
         player.sendMessage("§e/mdp show [player名] 薬の使用情報を見ることができます");

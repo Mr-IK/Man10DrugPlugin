@@ -13,7 +13,7 @@ public class DataBase{
 
     static HashMap<String,PlayerDrugData> playerHash = new HashMap<String, PlayerDrugData>();
 
-//key...playerName,drugName
+//key...playerName+drugName
     static PlayerDrugData loadData(String key){
         PlayerDrugData data = playerHash.get(key);
         if (data == null){
