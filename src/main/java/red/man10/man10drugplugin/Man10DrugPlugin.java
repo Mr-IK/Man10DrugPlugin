@@ -108,14 +108,14 @@ public final class Man10DrugPlugin extends JavaPlugin {
             l.append("§").append(nameData[i]);
         }
         loreData.add(String.valueOf(l));
-        try {
-            l.append(data.lore.get(0));
-            data.lore.set(0, String.valueOf(l));
-            meta.setLore(data.lore);
-        }catch (IndexOutOfBoundsException e){
-            meta.setLore(Collections.singletonList(String.valueOf(l)));
+        if (!data.lore.isEmpty()){
+            data.lore.add(String.valueOf(l));
+        }else {
+            data.lore.add("§e賢いman10民は薬を吸ってはいけません！");
+            data.lore.add(String.valueOf(l));
         }
-        if (!(data.damage == 0)){
+        meta.setLore(data.lore);
+        if (data.damage != 0){
             drug.setDurability(data.damage);
         }
         drug.setItemMeta(meta);

@@ -10,12 +10,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import static red.man10.man10drugplugin.DataBase.*;
 import static red.man10.man10drugplugin.LoadConfigData.*;
 
-public class DrugTimer  extends BukkitRunnable{
+public class DrugTimer  extends BukkitRunnable {
     MySQLManager mysql;
     Player player;
     String drug;
     String key;
-    public DrugTimer(MySQLManager mysql,Player player,String drug,String key){
+
+    public DrugTimer(MySQLManager mysql, Player player, String drug, String key) {
         this.mysql = mysql;
         this.player = player;
         this.drug = drug;
@@ -27,19 +28,15 @@ public class DrugTimer  extends BukkitRunnable{
     public void run() {
         PlayerDrugData data = playerHash.get(key);
         DrugData drugData = drugMap.get(drug);
-        Bukkit.getLogger().info("task run");
-        if (drugData.symptomsBuff.get(data.level)==null){
+        if (drugData.symptomsBuff.get(data.level) == null || drugData.symptomsBuff.get(data.level).length == 0) {
             return;
         }
         player.sendMessage(drugData.symptomsMessage);
-        for (int i = 0;i!=drugData.symptomsBuff.get(data.level).length;i++) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i]),
-                    Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1]),
-                    Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
-            i+=2;
+        for (int i = 0; i != drugData.symptomsBuff.get(data.level).length; i++) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i]), Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1]), Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
+            i += 2;
 
         }
 
     }
 }
-
