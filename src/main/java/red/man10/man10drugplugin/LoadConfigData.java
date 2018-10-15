@@ -58,8 +58,8 @@ public class LoadConfigData {
         String symptomsMessage = "§4§lｸｽﾘｨ.....ｸｽﾘｨ.....ﾋｬｧｧｧ";//禁断症状が出たときのメッセージ
         short damage = 0;//アイテムのダメージ値
         int level = 0;//何段階にするか、依存を治す場合 カウントを下げる強さ
-        long time = 6000;//禁断の出る時間(tick)
-        long sympTime = 600;//繰り返し
+        long time = 2400;//禁断の出る時間(tick) def 2min
+        long sympTime = 1200;//繰り返し
         int power = 0;//指定回数使用でレベルアップ、依存を治す薬の場合、指定回数で依存している薬のレベルを下げる
         byte type = 0; //0...薬物,1...依存を治す,2...治癒
         byte symptoms = 0;//0...無効1...有効

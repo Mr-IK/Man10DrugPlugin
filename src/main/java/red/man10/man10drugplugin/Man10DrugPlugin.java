@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -105,6 +106,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
         meta.setLore(data.lore);
         if (data.damage != 0){
             drug.setDurability(data.damage);
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
         drug.setItemMeta(meta);
         return drug;

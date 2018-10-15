@@ -131,9 +131,11 @@ public class MDPEvents implements Listener {
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
             ItemStack item = player.getInventory().getItemInMainHand();
+            //lore未記入のアイテム、空気などを弾く
             if (item.getType() == Material.AIR||
                     item.getItemMeta().getLore() == null||
                     item.getItemMeta().getLore().isEmpty())return;
+
             for (int i = 0;i!=loreData.size();i++){
                 if (item.getItemMeta().getLore().get(item.getItemMeta().getLore().size()-1)
                         .equalsIgnoreCase(loreData.get(i))){
