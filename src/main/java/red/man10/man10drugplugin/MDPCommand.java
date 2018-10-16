@@ -88,12 +88,12 @@ public class MDPCommand implements CommandExecutor {
         if (cmd.equalsIgnoreCase("load")){
             if (args.length != 2){
                 for (Player p : Bukkit.getServer().getOnlinePlayers()){
-                    DataBase.loadDataBase(mysql,p);
+                    DataBase.loadDataBase(plugin,mysql,p);
                 }
                 player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを読み込みました");
                 return true;
             }
-            DataBase.loadDataBase(mysql,Bukkit.getPlayer(args[1]));
+            DataBase.loadDataBase(plugin,mysql,Bukkit.getPlayer(args[1]));
             player.sendMessage(chatMessage+"§a"+args[1]+"§bのドラッグデータを読み込みました");
             return true;
 
@@ -111,7 +111,7 @@ public class MDPCommand implements CommandExecutor {
             Man10DrugPlugin.drugDataLoad();
             player.sendMessage(chatMessage+"§aプレイヤーデータ読み込み");
             for (Player p : Bukkit.getServer().getOnlinePlayers()){
-                DataBase.loadDataBase(mysql,p);
+                DataBase.loadDataBase(plugin,mysql,p);
             }
             return true;
         }

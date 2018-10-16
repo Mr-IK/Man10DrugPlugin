@@ -154,7 +154,7 @@ public class MDPEvents implements Listener {
     }
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent event){
-        loadDataBase(mysql,event.getPlayer());
+        loadDataBase(plugin,mysql,event.getPlayer());
 
     }
     @EventHandler

@@ -121,7 +121,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new MDPEvents(this,mysql), this);
         drugDataLoad();//load config
         for (Player p : Bukkit.getServer().getOnlinePlayers()){//reload時にプレイヤーがいた場合
-            DataBase.loadDataBase(mysql,p);
+            DataBase.loadDataBase(this,mysql,p);
         }
         Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを読み込みました");
     }
