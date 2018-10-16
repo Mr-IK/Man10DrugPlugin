@@ -42,6 +42,7 @@ public class DrugTimer  extends BukkitRunnable {
         data.time += drugData.sympTime;
         if (drugData.stopTime !=0&&data.time>=drugData.stopTime){
             Bukkit.getScheduler().cancelTask(data.id);
+            data.time = 0;
         }
 
     }

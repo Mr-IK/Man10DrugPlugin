@@ -99,7 +99,10 @@ public class MDPEvents implements Listener {
                         break;
                     }
                 }
-                if (hash.count <=0)hash.count = 0;
+                if (hash.count <=0){
+                    hash.count = 0;
+                    hash.time = 0;
+                }
                 DataBase.saveData(pKey,hash);
             }
             if (hash.isDependence){
@@ -132,6 +135,7 @@ public class MDPEvents implements Listener {
             }
             hash.level = 0;
             hash.count = 0;
+            hash.time = 0;
             DataBase.saveData(pKey,hash);
 
         }

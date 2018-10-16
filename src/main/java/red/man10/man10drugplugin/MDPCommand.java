@@ -120,6 +120,14 @@ public class MDPCommand implements CommandExecutor {
             for (int i = 0;i!=drugName.size();i++){
                 player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+drugMap.get(drugName.get(i)).name);
             }
+            return true;
+        }
+        if (cmd.equalsIgnoreCase("dep")){
+            if (playerHash.get(args[1]+args[2]).isDependence){
+                player.sendMessage("true");
+            }else {
+                player.sendMessage("false");
+            }
         }
         return true;
 

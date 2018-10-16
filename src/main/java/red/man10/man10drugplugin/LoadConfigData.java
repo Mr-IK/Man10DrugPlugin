@@ -31,7 +31,7 @@ public class LoadConfigData {
             case "TYPE" :data.type = Byte.parseByte(str[1]);break;//def 0
             case "SYMPTOMS":data.symptoms = Byte.parseByte(str[1]);//def 0
             case "TIME" :data.time = Long.parseLong(str[1]);break;//def 300(5分)
-            case "SYMPTIME":data.time = Long.parseLong(str[1]);break;
+            case "SYMPTIME":data.sympTime = Long.parseLong(str[1]);break;
             case "STOPTIME" :data.stopTime = Long.parseLong(str[1]);break;
             case "BUFF":{
                 String[] buff = str[1].split(",",0);

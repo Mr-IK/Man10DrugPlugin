@@ -32,6 +32,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
         drugStack.clear();
         drugMap.clear();
         playerHash.clear();
+        loreData.clear();
         File drugFolder = new File(Bukkit.getServer()
                 .getPluginManager().getPlugin("Man10DrugPlugin").getDataFolder(),File.separator);
         if (!drugFolder.exists()){
