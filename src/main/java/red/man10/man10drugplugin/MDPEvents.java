@@ -105,7 +105,7 @@ public class MDPEvents implements Listener {
                 }
                 DataBase.saveData(pKey,hash);
             }
-            if (hash.isDependence){
+            if (hash.isDependence||hash.time>0){
                 hash.isDependence= false;
                 hash.time = 0;
                 Bukkit.getScheduler().cancelTask(hash.id);
@@ -128,7 +128,7 @@ public class MDPEvents implements Listener {
                 player.sendMessage("§aあれ？.....解毒薬を飲む必要ってあるのかな...");
                 return;
             }
-            if (hash.isDependence){
+            if (hash.isDependence||hash.time>0){
                 hash.isDependence = false;
                 Bukkit.getScheduler().cancelTask(hash.id);
                 hash.time = 0;
