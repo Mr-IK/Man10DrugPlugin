@@ -107,8 +107,10 @@ public class MDPEvents implements Listener {
                 hash.time = 0;
                 Bukkit.getScheduler().cancelTask(hash.id);
             }
-            hash.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,hash.drugTimer,data.time,data.sympTime);
-            hash.isDependence = true;
+            if (hash.count>0){
+                hash.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,hash.drugTimer,data.time,data.sympTime);
+                hash.isDependence = true;
+            }
             DataBase.saveData(pKey,hash);
 
 

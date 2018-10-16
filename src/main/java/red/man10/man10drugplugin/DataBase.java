@@ -72,6 +72,7 @@ public class DataBase{
             PlayerDrugData data = loadData(key);
             if (drugMap.get(drugName.get(i)).symptoms==1){
                 Bukkit.getScheduler().cancelTask(data.id);
+                data.isDependence = false;
             }
 
             String sql = "UPDATE man10drugPlugin.drug SET count="+data.count+",level="+data.level+
