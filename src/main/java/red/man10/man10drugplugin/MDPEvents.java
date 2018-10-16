@@ -59,6 +59,7 @@ public class MDPEvents implements Listener {
             if (playerData.drugTimer!=null){//禁断症状開始
                 if (playerData.isDependence){
                     playerData.isDependence = false;
+                    playerData.time = 0;
                     Bukkit.getScheduler().cancelTask(playerData.id);
                 }
                 playerData.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,playerData.drugTimer,data.time,data.sympTime);
@@ -66,10 +67,12 @@ public class MDPEvents implements Listener {
 
             }
             playerData.count ++;
-            for (int i = 0;i!=data.level;i++){//レベルアップ処理
-                if (playerData.count == data.power*i){
-                    playerData.level ++;
-                    break;
+            if (!(playerData.level >= data.level)){
+                for (int i = 0;i!=data.level;i++){//レベルアップ処理
+                    if (playerData.count == data.power*i){
+                        playerData.level ++;
+                        break;
+                    }
                 }
             }
 
@@ -77,9 +80,13 @@ public class MDPEvents implements Listener {
         //治癒 （弱）
         /////////////////////
         }else if (data.type == 1){
-            playerData.count ++;
             String pKey =  player.getName()+data.weakDrug;
             PlayerDrugData hash = playerHash.get(pKey);//依存を弱める対象
+            if (hash.count == 0){
+                player.sendMessage("§aあれ？.....解毒薬を飲む必要ってあるのかな...");
+                return;
+            }
+            playerData.count ++;
             player.sendMessage(data.useMessage);
             if (playerData.count==data.power){//指定回数
                 playerData.count = 0;
@@ -92,10 +99,12 @@ public class MDPEvents implements Listener {
                         break;
                     }
                 }
+                if (hash.count <=0)hash.count = 0;
                 DataBase.saveData(pKey,hash);
             }
             if (hash.isDependence){
                 hash.isDependence= false;
+                hash.time = 0;
                 Bukkit.getScheduler().cancelTask(hash.id);
             }
             hash.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,hash.drugTimer,data.time,data.sympTime);
@@ -110,9 +119,14 @@ public class MDPEvents implements Listener {
             player.sendMessage(data.useMessage);
             String pKey =  player.getName()+data.weakDrug;
             PlayerDrugData hash = playerHash.get(pKey);//依存を弱める対象
+            if (hash.count == 0){
+                player.sendMessage("§aあれ？.....解毒薬を飲む必要ってあるのかな...");
+                return;
+            }
             if (hash.isDependence){
                 hash.isDependence = false;
                 Bukkit.getScheduler().cancelTask(hash.id);
+                hash.time = 0;
             }
             hash.level = 0;
             hash.count = 0;
@@ -135,10 +149,9 @@ public class MDPEvents implements Listener {
             if (item.getType() == Material.AIR||
                     item.getItemMeta().getLore() == null||
                     item.getItemMeta().getLore().isEmpty())return;
-
+            String lore = item.getItemMeta().getLore().get(item.getItemMeta().getLore().size()-1);
             for (int i = 0;i!=loreData.size();i++){
-                if (item.getItemMeta().getLore().get(item.getItemMeta().getLore().size()-1)
-                        .equalsIgnoreCase(loreData.get(i))){
+                if (lore.equalsIgnoreCase(loreData.get(i))){
                     String key = loreData.get(i).replaceAll("§","");
                     event.setCancelled(true);
                     useDrug(key, item, player);

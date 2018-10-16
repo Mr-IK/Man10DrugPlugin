@@ -28,7 +28,6 @@ public class DataBase{
 
     public static void loadDataBase(Man10DrugPlugin plugin,MySQLManager mysql, Player player){
         ResultSet rs;
-        playerHash.clear();
         for (int i = 0;i!=drugName.size();i++){
             String key = player.getName()+drugName.get(i);
             PlayerDrugData data = loadData(key);
@@ -53,12 +52,15 @@ public class DataBase{
                 rs.close();
                 if (drugMap.get(drugName.get(i)).symptoms==1){
                     data.drugTimer = new DrugTimer(mysql,player,drugName.get(i),key);
-                    LoadConfigData.DrugData drugData = drugMap.get(drugName);
-                    data.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,data.drugTimer,drugData.sympTime,drugData.sympTime);
+                    if (data.time > 0){
+                        LoadConfigData.DrugData drugData = drugMap.get(drugName.get(i));
+                        data.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,data.drugTimer,drugData.sympTime,drugData.sympTime);
+                    }
                 }
                 saveData(key,data);
             } catch (Exception e) {
                 Bukkit.getLogger().info(e.toString());
+                Bukkit.getLogger().info(drugName.get(i));
             }
         }
         Bukkit.getLogger().info(player.getName()+" load DB");

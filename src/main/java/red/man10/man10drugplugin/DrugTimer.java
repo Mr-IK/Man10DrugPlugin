@@ -28,7 +28,7 @@ public class DrugTimer  extends BukkitRunnable {
     public void run() {
         PlayerDrugData data = playerHash.get(key);
         DrugData drugData = drugMap.get(drug);
-        if (drugData.symptomsBuff.get(data.level) == null || drugData.symptomsBuff.get(data.level).length == 0) {
+        if (drugData.symptomsBuff.get(data.level)==null) {
             return;
         }
         player.sendMessage(drugData.symptomsMessage);

@@ -55,6 +55,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
                 while ((str = br.readLine()) !=null){
                     LoadConfig(drugName.get(i),str);
                 }
+                br.close();
                 drugStack.put(drugName.get(i),drugItem(drugName.get(i)));
 
 
@@ -106,6 +107,7 @@ public final class Man10DrugPlugin extends JavaPlugin {
         meta.setLore(data.lore);
         if (data.damage != 0){
             drug.setDurability(data.damage);
+            meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
         drug.setItemMeta(meta);
