@@ -93,10 +93,10 @@ public class MDPEvents implements Listener {
 
 
                 hash.count -= data.level;//指定の値だけカウントを下げる
-                for (int i = 0;i!=hash.level;i++){
+                for (int i = hash.level;i!=0;i--){
                     if (hash.count <= drugMap.get(data.weakDrug).power*i){//カウントがパワー*i未満になったらレベルを下げる
                         hash.level --;
-                        break;
+                        //break;
                     }
                 }
                 if (hash.count <=0){
