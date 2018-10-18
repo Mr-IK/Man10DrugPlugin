@@ -1,7 +1,6 @@
 package red.man10.man10drugplugin;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,8 +46,9 @@ public class MDPEvents implements Listener {
         if (data.type == 0){
             if (data.buff.size()==0){
                 player.sendMessage("§4§lスーハー.....§2あれ？");
+                return;
             }else {
-                player.sendMessage(data.useMessage);
+                player.sendMessage(data.useMessage.get(playerData.level));//レベルごとにチャットメッセージを変更可能
                 for (int i = 0;i!=data.buff.get(playerData.level).length;i++) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data.buff.get(playerData.level)[i]),
                             Integer.parseInt(data.buff.get(playerData.level)[i + 1]),
@@ -65,6 +65,10 @@ public class MDPEvents implements Listener {
                 playerData.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,playerData.drugTimer,data.time,data.sympTime);
                 playerData.isDependence = true;
 
+            }
+            if (data.particle.get(playerData.level) != null){//プレイヤーの周りにパーティクルを発生
+                player.getWorld().spawnParticle(Particle.valueOf(data.particle.get(playerData.level)[0]),player.getLocation()
+                ,Integer.parseInt(data.particle.get(playerData.level)[1]));
             }
             playerData.count ++;
             if (!(playerData.level >= data.level)){
@@ -87,7 +91,7 @@ public class MDPEvents implements Listener {
                 return;
             }
             playerData.count ++;
-            player.sendMessage(data.useMessage);
+            player.sendMessage(data.useMessage.get(0));
             if (playerData.count==data.power){//指定回数
                 playerData.count = 0;
 
@@ -121,7 +125,7 @@ public class MDPEvents implements Listener {
         //治癒（強)
         /////////////////////
         }else if (data.type == 2){
-            player.sendMessage(data.useMessage);
+            player.sendMessage(data.useMessage.get(0));
             String pKey =  player.getName()+data.weakDrug;
             PlayerDrugData hash = playerHash.get(pKey);//依存を弱める対象
             if (hash.count == 0){
@@ -168,7 +172,7 @@ public class MDPEvents implements Listener {
 
     @EventHandler
     public void playerQuitEvent(PlayerQuitEvent event){
-        saveDataBase(mysql,event.getPlayer());
+        saveDataBase(mysql,event.getPlayer(),true);
 
     }
     @EventHandler

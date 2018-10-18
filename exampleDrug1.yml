@@ -1,0 +1,35 @@
+name: example drug1
+material: DIAMOND_HOE
+type: 0
+damage: 607
+level: 3
+power: 10
+time: 1200
+symptime: 600
+stoptime: 3600
+symptoms: 1
+buff:
+  - SLOW,100,40,LUCK,500,20
+  - SLOW,150,40,LUCK,500,25,FIRE_RESISTANCE,200,1
+  - SLOW,200,40,LUCK,500,30,FIRE_RESISTANCE,200,1
+  - SLOW,250,40,LUCK,500,35,FIRE_RESISTANCE,200,1
+  - SLOW,300,40,LUCK,500,40,FIRE_RESISTANCE,200,1
+sympbuff:
+  - WITHER,100,2
+  - WITHER,200,2
+  - WITHER,300,2
+  - WITHER,400,2
+  - WITHER,500,2
+
+usemessage:
+  - usemessage level1
+  - usemessage level2
+  - usemessage level3
+sympmessage:
+  - sympmessage level1
+  - sympmessage level2
+  - sympmessage level3
+particle:
+  - SMOKE_LARGE,10
+  - SMOKE_LARGE,20
+  - SMOKE_LARGE,30

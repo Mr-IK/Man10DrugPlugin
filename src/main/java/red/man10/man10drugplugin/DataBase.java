@@ -31,16 +31,28 @@ public class DataBase{
         for (int i = 0;i!=drugName.size();i++){
             String key = player.getName()+drugName.get(i);
             PlayerDrugData data = loadData(key);
-            String sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
+            String sql = "SELECT " +
+                    "count," +
+                    "level," +
+                    "time" +
+                    " FROM man10drugPlugin.drug" +
+                    " WHERE uuid='"+player.getUniqueId()+
                     "' and drug_name='"+ drugName.get(i)+"';";
             rs = mysql.query(sql);
             try {
                 if (rs == null||!rs.next()){
-                    sql = "INSERT INTO man10drugPlugin.drug VALUES('"+
-                            player.getUniqueId()+"','"+player.getName()+"','"+drugName.get(i)+"',0,0,0);";
+                    sql = "INSERT INTO man10drugPlugin.drug " +
+                        "VALUES('"+player.getUniqueId()+"'," +
+                            "'"+player.getName()+"'," +
+                            "'"+drugName.get(i)+"',0,0,0);";
                     mysql.execute(sql);
                     Bukkit.getLogger().info(player.getName()+" insert DB");
-                    sql = "SELECT count,level,time FROM man10drugPlugin.drug WHERE uuid='"+player.getUniqueId()+
+                    sql = "SELECT " +
+                            "count," +
+                            "level," +
+                            "time" +
+                            " FROM man10drugPlugin.drug" +
+                            " WHERE uuid='"+player.getUniqueId()+
                             "' and drug_name='"+ drugName.get(i)+"';";
                     rs = mysql.query(sql);
                     rs.next();
@@ -66,17 +78,26 @@ public class DataBase{
         Bukkit.getLogger().info(player.getName()+" load DB");
     }
 
-    public static void saveDataBase(MySQLManager mysql ,Player player){
+    /**
+     *
+     * @param mysql mysqlManager
+     * @param player saveするplayer
+     * @param cancel タスクキャンセルするか
+     */
+    public static void saveDataBase(MySQLManager mysql ,Player player,boolean cancel){
         for(int i = 0;i!=drugName.size();i++){
             String key = player.getName()+drugName.get(i);
             PlayerDrugData data = loadData(key);
-            if (drugMap.get(drugName.get(i)).symptoms==1){
+            if (drugMap.get(drugName.get(i)).symptoms==1&&cancel){
                 Bukkit.getScheduler().cancelTask(data.id);
                 data.isDependence = false;
             }
 
-            String sql = "UPDATE man10drugPlugin.drug SET count="+data.count+",level="+data.level+
-                    ",time="+data.time+" WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
+            String sql = "UPDATE man10drugPlugin.drug " +
+                    "SET count="+data.count+
+                    ",level="+data.level+
+                    ",time="+data.time+"" +
+                    " WHERE uuid='"+player.getUniqueId()+"'and drug_name='"
                     +drugName.get(i)+"';";
             mysql.execute(sql);
         }

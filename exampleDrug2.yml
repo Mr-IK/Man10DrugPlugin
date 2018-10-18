@@ -1,0 +1,11 @@
+name: example drug2
+material: DIAMOND_HOE
+damage: 0
+type: 1
+weakdrug: exampleDrug1
+time: 3600
+symptime: 2400
+level: 15
+power: 15
+usemessage:
+  - usemessage 2

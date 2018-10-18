@@ -1,8 +1,11 @@
 package red.man10.man10drugplugin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,42 +15,52 @@ drugName...拡張子を含まないファイル名
  */
 
 public class LoadConfigData {
-    public static void LoadConfig(String drugName,String brLine){//str...行
-        if (brLine ==null){
-            Bukkit.getLogger().info("空白の行があります");
-            return;
-        }
-        DrugData data = loadData(drugName);
-        String[] str = brLine.split(":");
-        switch (str[0]){
-            case "NAME":data.name = str[1];break;//必須
-            case "MATERIAL":data.material = str[1];break;//必須
-            case "USEME" :data.useMessage = str[1];break;//任意
-            case "SYMPME" :data.symptomsMessage = str[1];break;//任意
-            case "WEAKDRUG" :data.weakDrug = str[1];break;//任意
-            case "DAMAGE":data.damage = Short.parseShort(str[1]);break;//def 0
-            case "LEVEL":data.level = Integer.parseInt(str[1]);break;//def 0
-            case "POWER":data.power = Integer.parseInt(str[1]);break;//def 0
-            case "TYPE" :data.type = Byte.parseByte(str[1]);break;//def 0
-            case "SYMPTOMS":data.symptoms = Byte.parseByte(str[1]);//def 0
-            case "TIME" :data.time = Long.parseLong(str[1]);break;//def 300(5分)
-            case "SYMPTIME":data.sympTime = Long.parseLong(str[1]);break;
-            case "STOPTIME" :data.stopTime = Long.parseLong(str[1]);break;
-            case "BUFF":{
-                String[] buff = str[1].split(",",0);
-                data.buff.add(buff);
-                break;
-            }
-            case "SYMPBUFF":{
-                String[] buff = str[1].split(",",0);
-                data.symptomsBuff.add(buff);
-                break;
-            }
-            case "LORE":data.lore.add(str[1]);break;
-            default:Bukkit.getLogger().info("存在しない項目を入力しているか、記入ミスをしています");
-        }
-        saveData(drugName,data);
+    ////////////////
+    //YMLを読み込む
+    public static void loadConfig(File file,String drugName){
+        FileConfiguration data = YamlConfiguration.loadConfiguration(file);
+        DrugData drug = loadData(drugName);
+        drug.name = data.getString("name","drug");
+        drug.material = data.getString("material","DIAMOND_HOE");
+        drug.type = (byte) data.getInt("type",0);
+        drug.damage = (short) data.getInt("damage",0);
+        drug.useMessage = data.getStringList("usemessage");
+        if (drug.type == 0){//依存
 
+            for (int i = 0;i!=data.getStringList("buff").size();i++){
+                drug.buff.add(data.getStringList("buff").get(i).split(",",0));
+            }
+
+            for (int i = 0;i!=data.getStringList("sympbuff").size();i++){
+                drug.symptomsBuff.add(data.getStringList("sympbuff").get(i).split(",",0));
+            }
+
+            for (int i =0;i!=data.getStringList("particle").size();i++){
+                drug.particle.add(data.getStringList("particle").get(i).split(",",0));
+            }
+            drug.level = data.getInt("level",0);//段階
+            drug.power = data.getInt("power",50);
+            drug.sympMessage = data.getStringList("sympmessage");//禁断メッセージ
+            drug.symptoms = (byte) data.getInt("symptoms");
+            if (drug.symptoms ==1){
+                drug.time = data.getInt("time",2400);//2分
+                drug.sympTime = data.getInt("symptime",1200);//繰り返し
+                drug.stopTime = data.getInt("stoptime",0);//依存が自然に止まる時間
+            }
+        }
+        if (drug.type == 1){//禁欲弱
+            drug.weakDrug = data.getString("weakdrug");
+            drug.time = data.getInt("time",2400);//2分
+            drug.sympTime = data.getInt("symptime",1200);//繰り返し
+            drug.level = data.getInt("level",10);//段階
+            drug.power = data.getInt("power",10);
+
+        }
+        if (drug.type == 2){//禁欲強
+            drug.weakDrug = data.getString("weakdrug");
+
+        }
+        saveData(drugName,drug);
     }
 
 
@@ -55,8 +68,6 @@ public class LoadConfigData {
         String name;//表示名
         String material;//薬にするアイテム
         String weakDrug;//弱める薬、ファイル名
-        String useMessage = "§4§lスーハー....(゜∀。)ﾜﾋｬﾋｬﾋｬﾋｬﾋｬﾋｬ";//使ったときのチャットメッセージ
-        String symptomsMessage = "§4§lｸｽﾘｨ.....ｸｽﾘｨ.....ﾋｬｧｧｧ";//禁断症状が出たときのメッセージ
         short damage = 0;//アイテムのダメージ値
         int level = 0;//何段階にするか、依存を治す場合 カウントを下げる強さ
         long time = 2400;//禁断の出る時間(tick) def 2min
@@ -68,6 +79,10 @@ public class LoadConfigData {
         List<String[]> buff = new ArrayList<String[]>();//index-1 = level
         List<String[]> symptomsBuff = new ArrayList<String[]>();
         List<String> lore = new ArrayList<String>();//説明部分
+        List<String> useMessage = new ArrayList<String>();
+        List<String> sympMessage = new ArrayList<String>();
+        List<String[]> particle = new ArrayList<String[]>();
+
     }
 
     public static HashMap<String,DrugData> drugMap = new HashMap<String, DrugData>();//key...drugName

@@ -41,42 +41,21 @@ public final class Man10DrugPlugin extends JavaPlugin {
             return;
         }
         List<File> drugData = new ArrayList<File>(Arrays.asList(drugFolder.listFiles()));
-        try {
-            for (int i = 0; i!=drugData.size();i++){
-                if (drugData.get(i).getName().equalsIgnoreCase("config.yml")||
-                !drugData.get(i).isFile()){
-                    drugData.remove(drugData.get(i));
-                    i--;
-                    continue;
-                }
-                drugName.add(drugData.get(i).getName().replace(".txt",""));
-                Bukkit.getLogger().info("loading..."+drugName.get(i));
-                BufferedReader br = new BufferedReader(new FileReader(drugData.get(i)));
-                String str;
-                while ((str = br.readLine()) !=null){
-                    LoadConfig(drugName.get(i),str);
-                }
-                br.close();
-                drugStack.put(drugName.get(i),drugItem(drugName.get(i)));
-
-
+        for (int i = 0; i!=drugData.size();i++){
+            if (drugData.get(i).getName().equalsIgnoreCase("config.yml")||
+            !drugData.get(i).isFile()){
+                drugData.remove(drugData.get(i));
+                i--;
+                continue;
             }
-        } catch (FileNotFoundException e) {
-            Bukkit.getLogger().info("catch,br");
-        } catch (IOException e) {
-            Bukkit.getLogger().info("catch,br line");
-        }
-    }
+            drugName.add(drugData.get(i).getName().replace(".yml",""));
+            Bukkit.getLogger().info("loading..."+drugName.get(i));
+            loadConfig(drugData.get(i),drugName.get(i));
+            drugStack.put(drugName.get(i),drugItem(drugName.get(i)));
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        for (Player p : Bukkit.getServer().getOnlinePlayers()){
-            DataBase.saveDataBase(mysql,p);
-        }
-        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを保存しました");
 
-    }
+        }
+        }
 
     private static ItemStack drugItem(String drugName){
         DrugData data = loadData(drugName);
@@ -87,6 +66,12 @@ public final class Man10DrugPlugin extends JavaPlugin {
         if (data.material == null){
             Bukkit.getLogger().info("マテリアルが入力されていません");
             return null;
+        }
+        if (data.useMessage.isEmpty()){
+            data.useMessage.add("§4§lスーハー....(゜∀。)ﾜﾋｬﾋｬﾋｬﾋｬﾋｬﾋｬ");
+        }
+        if (data.sympMessage.isEmpty()){
+            data.sympMessage.add("§4§lｸｽﾘｨ.....ｸｽﾘｨ.....ﾋｬｧｧｧ");
         }
         ItemStack drug = new ItemStack(Material.valueOf(data.material),1);
         ItemMeta meta = drug.getItemMeta();
@@ -116,6 +101,16 @@ public final class Man10DrugPlugin extends JavaPlugin {
     }
 
     @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        for (Player p : Bukkit.getServer().getOnlinePlayers()){
+            DataBase.saveDataBase(mysql,p,true);
+        }
+        Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを保存しました");
+
+    }
+
+    @Override
     public void onEnable() {
         saveDefaultConfig();
         config = getConfig();
@@ -129,3 +124,9 @@ public final class Man10DrugPlugin extends JavaPlugin {
         Bukkit.getLogger().info("オンラインプレイヤーのドラッグデータを読み込みました");
     }
 }
+/*
+追加案
+effect
+ymlに変更
+チャット表示追加
+ */

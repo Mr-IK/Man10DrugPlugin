@@ -74,13 +74,13 @@ public class MDPCommand implements CommandExecutor {
         if (cmd.equalsIgnoreCase("save")){
             if (args.length != 2){
                 for (Player p : Bukkit.getServer().getOnlinePlayers()){
-                    DataBase.saveDataBase(mysql,p);
+                    DataBase.saveDataBase(mysql,p,false);
                 }
                 player.sendMessage(chatMessage+"§aオンラインプレイヤーのドラッグデータを保存しました");
                 return true;
             }
 
-            DataBase.saveDataBase(mysql,Bukkit.getPlayer(args[1]));
+            DataBase.saveDataBase(mysql,Bukkit.getPlayer(args[1]),false);
             player.sendMessage(chatMessage+"§a"+args[1]+"§bのドラッグデータを保存しました");
             return true;
 
@@ -101,7 +101,7 @@ public class MDPCommand implements CommandExecutor {
         if (cmd.equalsIgnoreCase("reload")){
             player.sendMessage(chatMessage+"§aプレイヤーデータの保存中");
             for (Player p : Bukkit.getServer().getOnlinePlayers()){
-                DataBase.saveDataBase(mysql,p);
+                DataBase.saveDataBase(mysql,p,true);
             }
             player.sendMessage(chatMessage+"§aコンフィグ再読み込み");
             drugName.clear();
@@ -121,13 +121,6 @@ public class MDPCommand implements CommandExecutor {
                 player.sendMessage(chatMessage+"§e"+drugName.get(i)+","+drugMap.get(drugName.get(i)).name);
             }
             return true;
-        }
-        if (cmd.equalsIgnoreCase("dep")){
-            if (playerHash.get(args[1]+args[2]).isDependence){
-                player.sendMessage("true");
-            }else {
-                player.sendMessage("false");
-            }
         }
         return true;
 

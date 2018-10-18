@@ -28,16 +28,17 @@ public class DrugTimer  extends BukkitRunnable {
     public void run() {
         PlayerDrugData data = playerHash.get(key);
         DrugData drugData = drugMap.get(drug);
-        if (drugData.symptomsBuff.get(data.level)==null) {
-            return;
-        }
-        player.sendMessage(drugData.symptomsMessage);
-        for (int i = 0; i != drugData.symptomsBuff.get(data.level).length; i++) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i])
-                    , Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1])
-                    , Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
-            i += 2;
+        player.sendMessage(drugData.sympMessage.get(data.level));
+        try {
+            for (int i = 0; i != drugData.symptomsBuff.get(data.level).length; i++) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(drugData.symptomsBuff.get(data.level)[i])
+                        , Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 1])
+                        , Integer.parseInt(drugData.symptomsBuff.get(data.level)[i + 2])));
+                i += 2;
 
+            }
+        }catch (Exception e){
+            Bukkit.getLogger().info(e.getMessage());
         }
         data.time += drugData.sympTime;
         if (drugData.stopTime !=0&&data.time>=drugData.stopTime||data.count ==0){

@@ -1,0 +1,7 @@
+name: example drug3
+material: DIAMOND_HOE
+weakdrug: exampleDrug1
+damage: 0
+type: 2
+usemessage:
+  - usemessage 3
